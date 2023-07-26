@@ -1,7 +1,7 @@
 class Board {
     constructor(el) {
         this.el = document.querySelector(el);
-        this.blocks = new Array(100).fill(null);
+        this.blocks = new Array(36).fill(null);
         this.gold = 50;
         this.upgradeLevel = 0;
         this.orderList = [];
@@ -44,7 +44,7 @@ class Board {
     
             block.el.addEventListener('touchstart', e => {
                 block.el.classList.remove('drag-on');
-                
+
                 if(block.data.level === null) return;
                 // dobule touch
                 if(block.touched) {
