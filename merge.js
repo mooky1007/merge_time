@@ -295,7 +295,7 @@ class Board {
     }
 
     createOrderItem() {
-        const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/500) + 3)));
+        const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/500) + 2)));
 
         this.orderList.push(new OrderList({
             time: (randomItem + 1) * 15000 + this.orderLastTime * 5000,
