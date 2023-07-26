@@ -7,7 +7,7 @@ class Board {
         this.orderList = [];
         this.maxOrder = 2;
         this.fame = 0;
-        this.orderDuration = 15000;
+        this.orderDuration = 10000;
 
         this.init();
         this.orderTimer();
