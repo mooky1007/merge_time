@@ -56,12 +56,12 @@ class Board {
         })
 
         this.buttons.upgrade2.addEventListener('click', e => {
-            if(this.gold <= ((16000 - this.orderDuration)/1000 + 1) * 1000) return;
+            if(this.gold <= ((12000 - this.orderDuration)/1000 + 1) * 500) return;
             if(this.orderDuration <= 5000){
                 this.buttons.upgrade2.style.display = "none";
                 return;
             };
-            this.gold -= ((16000 - this.orderDuration)/1000 + 1) * 1000;
+            this.gold -= ((12000 - this.orderDuration)/1000 + 1) * 1000;
             this.orderDuration -= 1000;
             this.updateOrderTimer();
             this.render();
@@ -94,7 +94,7 @@ class Board {
         this.blocks.forEach(block => block.render());
         document.querySelector('.gold').innerHTML = `${this.gold.toLocaleString()}`;
         this.buttons.upgrade1.querySelector('.price').innerHTML = (this.upgradeLevel * 200 + 200).toLocaleString();
-        this.buttons.upgrade2.querySelector('.price').innerHTML = (((16000 - this.orderDuration)/1000 + 1) * 1000).toLocaleString();
+        this.buttons.upgrade2.querySelector('.price').innerHTML = (((12000 - this.orderDuration)/1000 + 1) * 500).toLocaleString();
         this.buttons.upgrade3.querySelector('.price').innerHTML = (((2 - this.maxOrder) * 200) + 200).toLocaleString();
         this.buttons.upgrade4.querySelector('.price').innerHTML = (this.orderLastTime * 300 + 200).toLocaleString();
         // document.querySelector('.max_order').innerHTML = `${this.maxOrder}개`;
