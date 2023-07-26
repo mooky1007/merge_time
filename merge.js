@@ -7,7 +7,7 @@ class Board {
         this.orderList = [];
         this.maxOrder = 2;
         this.fame = 0;
-        this.orderDuration = 16000;
+        this.orderDuration = 12000;
         this.orderLastTime = 0;
         this.emogeArr = ["🍎","🍊","🍋","🍉","🍇","🍓","🍒","🍑","🍍","🍌","🍐","🍈","🍏","🍅"]
 
@@ -279,7 +279,7 @@ class Board {
     createRandomBlock() {
         const emptyBlocks = this.blocks.filter(block => block.data.level === null);
         const randomBlock = emptyBlocks[Math.floor(Math.random() * emptyBlocks.length)];
-        randomBlock.data.level = 2**[Math.floor(Math.random() * (this.upgradeLevel + 1))];
+        randomBlock.data.level = Math.floor(Math.random() * (this.upgradeLevel + 1) + 1);
         randomBlock.render();
     }
 
