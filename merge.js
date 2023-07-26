@@ -100,27 +100,42 @@ class Board {
             })
 
             block.el.addEventListener('touchstart', e => {
+                this.touchPos = {
+                    x: e.touches[0].clientX,
+                    y: e.touches[0].clientY
+                }
+                this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
+
                 if(block.data.level === null) return;
-                console.log('touchstart')
                 this.clone?.remove();
 
+                this.touchStart = true;
                 this.clone = block.createClone();
                 this.el.appendChild(this.clone);
                 block.el.style.opacity = 0.3;
-                this.touchStart = true;
             })
 
             block.el.addEventListener('touchend', e => {
+                this.touchPos = {
+                    x: e.changedTouches[0].clientX,
+                    y: e.changedTouches[0].clientY
+                }
+                this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
+
                 this.clone?.remove();
 
-                // if(!document.querySelector('.drag-on')) return;
                 if(!this.touchedTarget?.classList.contains('block')) return;
+                // if(!document.querySelector('.drag-on')) return;
 
                 const fromEl = block;
                 const toEl = this.blocks[this.touchedTarget.id];
     
-                if(fromEl.id === toEl.id) {
+                console.log(fromEl, toEl);
+
+                if(+fromEl.id === +toEl.id) {
                     block.el.style.opacity = 1;
+                    this.clone?.remove();
+                    this.touchStart = false;
                     return;
                 }
 
