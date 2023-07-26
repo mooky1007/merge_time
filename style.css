@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
 html {
@@ -16,6 +19,14 @@ body {
     align-items: center;
     width: 100%;
     height: 100%;
+    gap: 30px;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .board {
@@ -28,7 +39,7 @@ body {
 }
 
 .block {
-    border: 1px solid #fff;
+    border: 1px solid #111;
     width: 10%;
     height: 10%;
     display: flex;
@@ -41,11 +52,11 @@ body {
 }
 
 .block.active {
-    background: orange;
+    background: orange !important;
 }
 
 .block.drag-on {
-    background: orange;
+    background: orange !important;
 }
 
 .block.clone {
@@ -54,4 +65,182 @@ body {
     background: orange;
     pointer-events: none;
     border: none;
+}
+
+.status {
+    width: 600px;
+    color: #fff;
+    padding: 20px 0;
+}
+
+.button_wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    width: 100%;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.button_wrap button {
+    width: 100%;
+    max-width: 600px;
+    background: #fff;
+    color: #000;
+    box-shadow: none;
+    outline: none;
+    border-radius: 5px;
+    border: none;
+
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+.button_wrap button:hover {
+    background: #ddd;
+}
+
+.order_list {
+    color: #fff;
+    height: 600px;
+}
+
+.order_list ul {
+    min-width: 200px;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.order_list ul li {
+    display: flex;
+    width: 100%;
+    list-style: none;
+    padding: 10px 0;
+    background: #111;
+    padding: 10px 20px 40px 20px;
+    border-radius: 10px;
+    position: relative;
+    flex-direction: column;
+}
+
+.order_list ul li + li {
+    margin-top: 10px;
+}
+
+.order_list ul li span.need_item {
+    font-weight: bold;
+}
+
+.order_list ul li span.buy_price {
+    color: orange;
+}
+
+.order_list ul li button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: #333;
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 5px;
+    margin-left: auto;
+    box-shadow: none;
+    outline: none;
+    border-radius: 5px;
+    border: none;
+}
+
+.order_list ul li .time {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+}
+
+.order_list ul li .time .min::after{
+    content: ":";
+}
+
+@media screen and (max-width: 720px) {
+    html {
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    body {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        height: 100vh;
+        padding: 20px 5%;
+        overflow: hidden;
+    }
+
+    .board {
+        /* 정사각형 */
+        width: 320px;
+        height: 320px;
+    }
+
+    .status {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .status span:first-child {font-weight: 700;}
+    .status span:last-child {color: #ddd;}
+
+    .order_list {
+        width: 100%;
+    }
+
+    .button_wrap {
+        flex-wrap: nowrap;
+    }
+
+    .button_wrap button {
+        font-size: 10px;
+        height: 32px;
+        padding: 0;
+        word-break: keep-all;
+    }
+
+    .order_list ul {
+        width: 100%;
+        overflow: auto;
+    }
+
+    .order_list ul li {
+        width: 100%;
+        padding: 10px 20px;
+    }
+
+    .order_list ul li.order {
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .order_list ul li .time {
+        position: relative;
+        bottom: inherit;
+        right: inherit;
+        display: flex;
+        align-items: center;
+        order: 3;
+    }
+
+    .order_list ul li button {
+        position: relative;
+        top: inherit;
+        right: inherit;
+        bottom: inherit;
+        left: inherit;
+        order: 4;
+    }
 }

@@ -2,14 +2,49 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>Merge Time</title>
     <link rel="stylesheet" href="./style.css">
     <script src="./merge.js"></script>
 </head>
 <body>
-    <div class="board"></div>
-    
+    <div class="row">
+        <div class="status">
+            <p>
+                <span>현금 :</span>
+                <span class="gold">0</span>
+            </p>
+            <!-- <p>
+                <span>업그레이드 레벨 :</span>
+                <span class="up_level">0</span>
+            </p>
+            <p>
+                <span>명성 :</span>
+                <span class="fame">0</span>
+            </p>
+            <p>
+                <span>주문서 속도 :</span>
+                <span class="order_duration">15s</span>
+            </p> -->
+            <p>
+                <span>최대 주문서 갯수 :</span>
+                <span class="max_order">2</span>
+            </p>
+        </div>
+        <div class="board"></div>
+        <div class="button_wrap">
+            <button type="button" id="buyItem">아이템 생성</button>
+            <button type="button" id="upgrade1">아이템 생성 레벨업 (100 Gold)</button>
+            <button type="button" id="upgrade2">주문서 생성 속도 레벨업 (500 Gold)</button>
+            <button type="button" id="upgrade3">최대 주문서 보유량 레벨업 (200 Gold)</button>
+        </div>
+    </div>
+    <div class="order_list">
+        주문서 목록
+        <ul>
+        </ul>
+    </div>
     <script>
         const board = new Board('.board');
     </script>
