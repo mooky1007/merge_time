@@ -24,6 +24,8 @@ class Board {
             this.el.appendChild(block.el);
 
             block.el.addEventListener('click', e => {
+                if(this.touchStart) return;
+
                 // dobule click
                 if(block.clicked) {
                     this.gold += Math.floor((block.data.level - 1) * 1.5 * 10) === 0 ? 1 : Math.floor((block.data.level - 1) * 1.5 * 10);
