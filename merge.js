@@ -119,6 +119,7 @@ class Board {
             block.el.addEventListener('touchend', e => this.touchDrop(e, block));
         });
 
+        this.container.addEventListener('touchstart', e => e.preventDefault());
         this.container.addEventListener('touchmove', e => this.touchMove(e));
     }
 
@@ -425,7 +426,7 @@ class OrderList {
 
         // needItem.innerHTML = this.board.emogeArr[this.data.needItem].repeat(this.data.needCnt);
         needItem.innerHTML = `${this.board.emogeArr[this.data.needItem]} <span class="cnt_num">x ${this.data.needCnt}</span>`
-        buyPrice.innerHTML = `${(+this.data.gold * +this.data.needCnt * +this.data.needItem + 1).toLocaleString()}<span style="font-size:10px;">원</span>`;
+        buyPrice.innerHTML = `${(+this.data.gold * +this.data.needCnt * 2**(+this.data.needItem)).toLocaleString()}<span style="font-size:10px;">원</span>`;
         button.innerHTML = '판매';
         button.classList.add('sell');
         button2.innerHTML = '삭제';
@@ -436,7 +437,7 @@ class OrderList {
         button.addEventListener('click', e => {
             if(this.board.blocks.filter(block => +block.data.level === +(this.data.needItem + 1)).length < this.data.needCnt) return;
 
-            this.board.gold += (+this.data.gold * +this.data.needCnt * +(this.data.needItem + 1));
+            this.board.gold += (+this.data.gold * +this.data.needCnt * 2**(this.data.needItem));
             this.board.fame += Math.floor((+this.data.gold * +this.data.needCnt)/5);
             if(this.board.fame > 10000){ board.fame = 10000; }
 
