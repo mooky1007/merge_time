@@ -101,6 +101,7 @@ class Board {
             })
 
             block.el.addEventListener('touchstart', e => {
+                e.preventDefault();
                 this.touchPos = {
                     x: e.touches[0].clientX,
                     y: e.touches[0].clientY
@@ -118,7 +119,8 @@ class Board {
                 block.el.style.opacity = 0.3;
             })
 
-            block.el.addEventListener('touchend', e => {    
+            block.el.addEventListener('touchend', e => {
+                e.preventDefault();
                 this.blocks.forEach(block => {
                     block.el.classList.remove('touch_on');
                 });
@@ -136,8 +138,6 @@ class Board {
 
                 const fromEl = block;
                 const toEl = this.blocks[this.touchedTarget.id];
-    
-                console.log(fromEl, toEl);
 
                 if(+fromEl.id === +toEl.id) {
                     block.el.style.opacity = 1;
@@ -170,10 +170,14 @@ class Board {
         });
 
         this.el.addEventListener('touchmove', e => {
+            e.preventDefault();
+
             this.touchPos = {
                 x: e.touches[0].clientX,
                 y: e.touches[0].clientY
             }
+
+            if(!this.clone) return;
             this.clone.style.left = `${this.touchPos.x - this.clone.offsetWidth/2}px`;
             this.clone.style.top = `${this.touchPos.y - this.clone.offsetHeight/2}px`;
 
@@ -182,6 +186,13 @@ class Board {
             });
             this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
             
+            if(!this.touchedTarget?.classList.contains('block')) {
+                this.clone?.remove();
+                this.blocks.forEach(block => {
+                    block.el.style = "";
+                }); 
+                return;
+            }
             this.touchedTarget.classList.add('touch_on');
         })
 
@@ -223,9 +234,9 @@ class Board {
             block.render();
         });
         document.querySelector('.gold').innerHTML = `${this.gold.toLocaleString()}원`;
+        document.querySelector('.max_order').innerHTML = `${this.maxOrder}개`;
         // document.querySelector('.up_level').innerHTML = this.upgradeLevel;
         // document.querySelector('.fame').innerHTML = this.fame;
-        document.querySelector('.max_order').innerHTML = `${this.maxOrder}개`;
         // document.querySelector('.order_duration').innerHTML = `${this.orderDuration / 1000}초`;
     }
 
@@ -237,10 +248,9 @@ class Board {
     }
 
     orderTimer() {
-        const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/100) + 3) - 0) + 0);
-        console.log(randomItem)
+        if(this.orderList.length >= this.maxOrder) return;
 
-        if(this.orderList.length > 5) return;
+        const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/500) + 3)));
 
         this.orderList.push(new OrderList({
             time: (randomItem + 1) * 15000,
@@ -255,7 +265,7 @@ class Board {
     createOrderTimer() {
         this.orderTimerObj = setInterval(() => {
             if(this.orderList.length > this.maxOrder) return;
-            const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/20) + 2)));
+            const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/500) + 3)));
             this.orderList.push(new OrderList({
                 id: new Date().getTime(),
                 time: (randomItem + 1) * 15000,
