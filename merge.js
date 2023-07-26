@@ -44,6 +44,8 @@ class Board {
     
             block.el.addEventListener('touchstart', e => {
                 block.el.classList.remove('drag-on');
+                
+                if(block.data.level === null) return;
                 // dobule touch
                 if(block.touched) {
                     this.gold += Math.floor((block.data.level - 1) * 1.5 * 10) === 0 ? 1 : Math.floor((block.data.level - 1) * 1.5 * 10);
