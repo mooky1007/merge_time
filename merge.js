@@ -28,7 +28,8 @@ class Board {
 
                 // dobule click
                 if(block.clicked) {
-                    this.gold += Math.floor((block.data.level - 1) * 1.5 * 10) === 0 ? 1 : Math.floor((block.data.level - 1) * 1.5 * 10);
+                    if(this.touchStart) return;
+                    this.gold += block.data.level * 5;
                     block.data.level = null;
                     this.render();
                     return;
@@ -48,7 +49,7 @@ class Board {
                 if(block.data.level === null) return;
                 // dobule touch
                 if(block.touched) {
-                    this.gold += Math.floor((block.data.level - 1) * 1.5 * 10) === 0 ? 1 : Math.floor((block.data.level - 1) * 1.5 * 10);
+                    this.gold += block.data.level * 5;
                     block.data.level = null;
                     this.render();
                     return;
@@ -104,7 +105,9 @@ class Board {
                     x: e.touches[0].clientX,
                     y: e.touches[0].clientY
                 }
+                
                 this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
+
 
                 if(block.data.level === null) return;
                 this.clone?.remove();
@@ -115,7 +118,11 @@ class Board {
                 block.el.style.opacity = 0.3;
             })
 
-            block.el.addEventListener('touchend', e => {
+            block.el.addEventListener('touchend', e => {    
+                this.blocks.forEach(block => {
+                    block.el.classList.remove('touch_on');
+                });
+
                 this.touchPos = {
                     x: e.changedTouches[0].clientX,
                     y: e.changedTouches[0].clientY
@@ -170,8 +177,12 @@ class Board {
             this.clone.style.left = `${this.touchPos.x - this.clone.offsetWidth/2}px`;
             this.clone.style.top = `${this.touchPos.y - this.clone.offsetHeight/2}px`;
 
+            this.blocks.forEach(block => {
+                block.el.classList.remove('touch_on');
+            });
             this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
             
+            this.touchedTarget.classList.add('touch_on');
         })
 
         document.querySelector('#buyItem').addEventListener('click', e => {

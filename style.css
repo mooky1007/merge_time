@@ -52,6 +52,10 @@ body {
     background: #54645d;
 }
 
+.touch_on {
+    border: 1px solid #fff;
+}
+
 .block:nth-of-type(2n){
     background: #4d5b55;
 }
