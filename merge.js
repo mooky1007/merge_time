@@ -295,7 +295,7 @@ class Board {
     }
 
     createOrderItem() {
-        const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/500) + 2)));
+        const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/300) + 2)));
 
         this.orderList.push(new OrderList({
             time: (randomItem + 1) * 15000 + this.orderLastTime * 5000,
@@ -435,8 +435,8 @@ class OrderList {
             if(this.board.blocks.filter(block => +block.data.level === +(this.data.needItem + 1)).length < this.data.needCnt) return;
 
             this.board.gold += (+this.data.gold * +this.data.needCnt);
-            this.board.fame += Math.floor((+this.data.gold * +this.data.needCnt)/10);
-            if(this.board.fame > 1000){ board.fame = 1000; }
+            this.board.fame += Math.floor((+this.data.gold * +this.data.needCnt)/5);
+            if(this.board.fame > 10000){ board.fame = 10000; }
 
             let cnt = 0;
 
