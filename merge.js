@@ -226,8 +226,7 @@ class Board {
     }
 
     touchStart(e, block) {
-        e.preventDefault();
-        console.log(block)
+        e.preventDefault()
 
         this.setTouchPosition(e);
         this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
@@ -286,9 +285,23 @@ class Board {
     }
 
     createRandomBlock() {
-        // 아래에서 부터 나오게 하기
         const emptyBlocks = this.blocks.filter(block => block.data.level === null);
-        const randomBlock = emptyBlocks[Math.floor(Math.random() * emptyBlocks.length)];
+
+        if(emptyBlocks.length === 0) return;
+
+        const emptyBlocks1 = emptyBlocks.filter(block => block.id < 21);
+        const emptyBlocks2 = emptyBlocks.filter(block => block.id >= 21 && block.id < 35);
+        const emptyBlocks3 = emptyBlocks.filter(block => block.id >= 35 && block.id < 49);
+
+        let randomBlock
+        if(emptyBlocks3.length !== 0){
+            randomBlock = emptyBlocks3[Math.floor(Math.random() * emptyBlocks3.length)];
+        }else if(emptyBlocks2.length !== 0){
+            randomBlock = emptyBlocks2[Math.floor((Math.random() * emptyBlocks2.length))];
+        }else if(emptyBlocks1.length !== 0){
+            randomBlock = emptyBlocks1[Math.floor(Math.random() * emptyBlocks1.length)];
+        }
+
         randomBlock.data.level = Math.floor(Math.random() * (this.upgradeLevel + 1) + 1);
         randomBlock.el.classList.add('scaleUp');
         randomBlock.render();
