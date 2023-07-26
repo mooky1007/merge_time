@@ -217,8 +217,9 @@ class Board {
 
         this.orderList.push(new OrderList({
             time: (randomItem + 1) * 10000,
-            gold: 2**randomItem * 15,
-            needItem: 2**randomItem
+            gold: 2**randomItem * 20,
+            needItem: 2**randomItem,
+            needCnt: Math.floor(Math.random() * (4 - 1) + 1)
         }));
 
         this.createOrderTimer();
@@ -227,12 +228,13 @@ class Board {
     createOrderTimer() {
         this.orderTimerObj = setInterval(() => {
             if(this.orderList.length > this.maxOrder) return;
-            const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/20) + 2) - 0) + 0);
+            const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/20) + 2)));
             this.orderList.push(new OrderList({
                 id: new Date().getTime(),
                 time: (randomItem + 1) * 10000,
-                gold: 2**randomItem * 15,
-                needItem: 2**randomItem
+                gold: 2**randomItem * 20,
+                needItem: 2**randomItem,
+                needCnt: Math.floor(Math.random() * (4 - 1) + 1)
             }));
         }, this.orderDuration);
     }
@@ -273,45 +275,55 @@ class Block {
     }
 
     render() {
-        this.el.innerHTML = this.data.level;
+        // this.el.innerHTML = this.data.level;
         switch(this.data.level) {
             case 1:
+                this.el.innerHTML = "🍎"
                 this.el.style.backgroundColor = "#eee4da";
                 this.el.style.color = "#776e65";
                 break;
             case 2:
+                this.el.innerHTML = "🍊"
                 this.el.style.backgroundColor = "#ede0c8";
                 this.el.style.color = "#776e65";
                 break;
             case 4:
+                this.el.innerHTML = "🍋"
                 this.el.style.backgroundColor = "#f2b179";
                 this.el.style.color = "#f9f6f2";
                 break;
             case 8:
+                this.el.innerHTML = "🍉"
                 this.el.style.backgroundColor = "#f59563";
                 this.el.style.color = "#f9f6f2";
                 break;
             case 16:
+                this.el.innerHTML = "🍇"
                 this.el.style.backgroundColor = "#f67c5f";
                 this.el.style.color = "#f9f6f2";
                 break;
             case 32:
+                this.el.innerHTML = "🍓"
                 this.el.style.backgroundColor = "#f65e3b";
                 this.el.style.color = "#f9f6f2";
                 break;
             case 64:
+                this.el.innerHTML = "🍒"
                 this.el.style.backgroundColor = "#edcf72";
                 this.el.style.color = "#f9f6f2";
                 break;
             case 128:
+                this.el.innerHTML = "🍑"
                 this.el.style.backgroundColor = "#edcc61";
                 this.el.style.color = "#f9f6f2";
                 break;
             case 256:
+                this.el.innerHTML = "🍍"
                 this.el.style.backgroundColor = "#edc850";
                 this.el.style.color = "#f9f6f2";
                 break;
             default:
+                this.el.innerHTML = ""
                 this.el.style.backgroundColor = "#000";
                 break;
         }
@@ -336,10 +348,22 @@ class OrderList {
         this.id = data?.id || new Date().getTime();
         this.el = document.querySelector(`.order_list ul`);
         this.item = null;
+        this.needCnt = data?.needCnt || 1;
         this.time = data?.time || 60000;
 
         this.data = data;
 
+        this.emogeArr = {
+            "1": "🍎",
+            "2": "🍊",
+            "4": "🍋",
+            "8": "🍉",
+            "16": "🍇",
+            "32": "🍓",
+            "64": "🍒",
+            "128": "🍑",
+            "256": "🍍"
+        }
         this.init();
     }
 
@@ -381,21 +405,28 @@ class OrderList {
         min.classList.add('min');
         sec.classList.add('sec');
 
-        needItem.innerHTML = this.data.needItem;
-        buyPrice.innerHTML = `${this.data.gold.toLocaleString()} 원`;
+        needItem.innerHTML = this.emogeArr[this.data.needItem].repeat(this.data.needCnt);
+        buyPrice.innerHTML = `${(+this.data.gold * +this.data.needCnt).toLocaleString()} 원`;
         button.innerHTML = '판매';
         min.innerHTML = this.data.time / 60000 > 9 ? Math.floor(this.data.time / 60000) : `0${Math.floor(this.data.time / 60000)}`;
         sec.innerHTML = this.data.time % 60000 > 9 ? Math.floor((this.data.time % 60000) / 1000) : `0${Math.floor((this.data.time % 60000) / 1000)}`;
 
         button.addEventListener('click', e => {
-            if(board.blocks.filter(block => +block.data.level === +this.data.needItem).length === 0) return;
+            if(board.blocks.filter(block => +block.data.level === +this.data.needItem).length < this.data.needCnt) return;
 
-            board.gold += this.data.gold;
-            board.fame += Math.floor(this.data.gold/10);
+            board.gold += (+this.data.gold * +this.data.needCnt);
+            board.fame += Math.floor((+this.data.gold * +this.data.needCnt)/10);
+
+            let cnt = 0;
+
             for(let i = 0; i < board.blocks.length; i++) {
                 if(+board.blocks[i].data.level === +this.data.needItem) {
                     board.blocks[i].data.level = null;
-                    break;
+                    cnt++;
+
+                    if(cnt === this.data.needCnt) {
+                        break;
+                    }
                 }
             }
 
