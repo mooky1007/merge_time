@@ -305,6 +305,7 @@ class Board {
         this.orderTimerObj = setInterval(() => {
             if(this.orderList.length > this.maxOrder) return;
             this.createOrderItem();
+            this.orderList.forEach(order => order.render());
         }, this.orderDuration);
     }
 
@@ -413,6 +414,7 @@ class OrderList {
         needItem.innerHTML = `${this.board.emogeArr[this.data.needItem]} <span class="cnt_num">x ${this.data.needCnt}</span>`
         buyPrice.innerHTML = `${(+this.data.gold * +this.data.needCnt).toLocaleString()}<span style="font-size:10px;">원</span>`;
         button.innerHTML = '판매';
+        button.classList.add('sell');
         button2.innerHTML = '삭제';
         button2.style.marginLeft = "0";
         min.innerHTML = this.data.time / 60000 > 9 ? Math.floor(this.data.time / 60000) : `0${Math.floor(this.data.time / 60000)}`;
@@ -446,8 +448,8 @@ class OrderList {
             if(this.board.gold < 5) return;
             this.item.remove();
             this.board.orderList = this.board.orderList.filter(order => order.id !== this.id);
-            this.board.render();
             this.board.gold -= 5;
+            this.render();
             this.board.render();
         });
 
@@ -468,5 +470,8 @@ class OrderList {
 
         min.innerHTML = Math.floor(this.time / 60000) > 9 ? Math.floor(this.time / 60000) : `0${Math.floor(this.time / 60000)}`;
         sec.innerHTML = Math.floor((this.time % 60000) / 1000) > 9 ? Math.floor((this.time % 60000) / 1000) : `0${Math.floor((this.time % 60000) / 1000)}`;
+
+        if(this.board.orderList.length === 0) this.el.classList.add('no-order');
+        else this.el.classList.remove('no-order');
     }
 }
