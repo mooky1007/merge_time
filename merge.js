@@ -45,12 +45,12 @@ class Board {
         })
 
         this.buttons.upgrade1.addEventListener('click', e => {
-            if(this.gold <= this.upgradeLevel * 200 + 200) return;
+            if(this.gold <= this.upgradeLevel * 400 + 400) return;
             if(this.upgradeLevel >= 4) {
                 this.buttons.upgrade1.style.display = "none";
                 return;
             };
-            this.gold -= this.upgradeLevel * 200 + 200;
+            this.gold -= this.upgradeLevel * 400 + 400;
             this.upgradeLevel++;
             this.render();
         })
@@ -61,19 +61,19 @@ class Board {
                 this.buttons.upgrade2.style.display = "none";
                 return;
             };
-            this.gold -= ((12000 - this.orderDuration)/1000 + 1) * 1000;
+            this.gold -= ((12000 - this.orderDuration)/1000 + 1) * 500;
             this.orderDuration -= 1000;
             this.updateOrderTimer();
             this.render();
         });
 
         this.buttons.upgrade3.addEventListener('click', e => {
-            if(this.gold <= ((2 - this.maxOrder) * 200) + 200) return;
+            if(this.gold <= ((this.maxOrder - 2) * 300) + 300) return;
             if(this.maxOrder >= 5){
                 this.buttons.upgrade3.style.display = "none";
                 return;
             };
-            this.gold -= ((2 - this.maxOrder) * 200) + 200;
+            this.gold -= ((this.maxOrder - 2) * 300) + 300;
             this.maxOrder++;
             this.render();
         });
@@ -93,9 +93,9 @@ class Board {
     render() {
         this.blocks.forEach(block => block.render());
         document.querySelector('.gold').innerHTML = `${this.gold.toLocaleString()}`;
-        this.buttons.upgrade1.querySelector('.price').innerHTML = (this.upgradeLevel * 200 + 200).toLocaleString();
+        this.buttons.upgrade1.querySelector('.price').innerHTML = (this.upgradeLevel * 400 + 400).toLocaleString();
         this.buttons.upgrade2.querySelector('.price').innerHTML = (((12000 - this.orderDuration)/1000 + 1) * 500).toLocaleString();
-        this.buttons.upgrade3.querySelector('.price').innerHTML = (((2 - this.maxOrder) * 200) + 200).toLocaleString();
+        this.buttons.upgrade3.querySelector('.price').innerHTML = (((this.maxOrder - 2) * 300) + 300).toLocaleString();
         this.buttons.upgrade4.querySelector('.price').innerHTML = (this.orderLastTime * 300 + 200).toLocaleString();
         // document.querySelector('.max_order').innerHTML = `${this.maxOrder}개`;
         // document.querySelector('.up_level').innerHTML = this.upgradeLevel;
