@@ -285,6 +285,7 @@ class Board {
     }
 
     createRandomBlock() {
+        // 아래에서 부터 나오게 하기
         const emptyBlocks = this.blocks.filter(block => block.data.level === null);
         const randomBlock = emptyBlocks[Math.floor(Math.random() * emptyBlocks.length)];
         randomBlock.data.level = Math.floor(Math.random() * (this.upgradeLevel + 1) + 1);
