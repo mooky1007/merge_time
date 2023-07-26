@@ -41,6 +41,7 @@ class Board {
             })
     
             block.el.addEventListener('touchstart', e => {
+                block.el.classList.remove('drag-on');
                 // dobule touch
                 if(block.touched) {
                     this.gold += Math.floor((block.data.level - 1) * 1.5 * 10) === 0 ? 1 : Math.floor((block.data.level - 1) * 1.5 * 10);
@@ -95,7 +96,10 @@ class Board {
             })
 
             block.el.addEventListener('touchstart', e => {
+                if(block.data.level === null) return;
                 console.log('touchstart')
+                this.clone?.remove();
+
                 this.clone = block.createClone();
                 this.el.appendChild(this.clone);
                 block.el.style.opacity = 0.3;
@@ -103,6 +107,8 @@ class Board {
             })
 
             block.el.addEventListener('touchend', e => {
+                this.clone?.remove();
+
                 // if(!document.querySelector('.drag-on')) return;
                 if(!this.touchedTarget?.classList.contains('block')) return;
 
@@ -110,7 +116,7 @@ class Board {
                 const toEl = this.blocks[this.touchedTarget.id];
     
                 if(fromEl.id === toEl.id) {
-                    toEl.el.classList.remove('drag-on');
+                    block.el.style.opacity = 1;
                     return;
                 }
 
@@ -129,13 +135,11 @@ class Board {
                     fromEl.data.level = temp;
                 }
                 this.render();
-    
-                toEl.el.classList.remove('drag-on');
 
                 this.touchStart = false;
 
                 block.el.style.opacity = 1;
-                this.clone.remove();
+                this.clone?.remove();
             })
         });
 

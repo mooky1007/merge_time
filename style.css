@@ -163,6 +163,10 @@ body {
 }
 
 @media screen and (max-width: 720px) {
+    .drag-on {
+        background: inherit !important;
+    }
+
     html {
         width: 100%;
         height: 100vh;
