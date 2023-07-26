@@ -279,48 +279,39 @@ class Block {
         switch(this.data.level) {
             case 1:
                 this.el.innerHTML = "🍎"
-                this.el.style.backgroundColor = "#eee4da";
-                this.el.style.color = "#776e65";
+                this.el.style.backgroundColor = "#111";
                 break;
             case 2:
                 this.el.innerHTML = "🍊"
-                this.el.style.backgroundColor = "#ede0c8";
-                this.el.style.color = "#776e65";
+                this.el.style.backgroundColor = "#111";
                 break;
             case 4:
                 this.el.innerHTML = "🍋"
-                this.el.style.backgroundColor = "#f2b179";
-                this.el.style.color = "#f9f6f2";
+                this.el.style.backgroundColor = "#111";
                 break;
             case 8:
                 this.el.innerHTML = "🍉"
-                this.el.style.backgroundColor = "#f59563";
-                this.el.style.color = "#f9f6f2";
+                this.el.style.backgroundColor = "#111";
                 break;
             case 16:
                 this.el.innerHTML = "🍇"
-                this.el.style.backgroundColor = "#f67c5f";
-                this.el.style.color = "#f9f6f2";
+                this.el.style.backgroundColor = "#111";
                 break;
             case 32:
                 this.el.innerHTML = "🍓"
-                this.el.style.backgroundColor = "#f65e3b";
-                this.el.style.color = "#f9f6f2";
+                this.el.style.backgroundColor = "#111";
                 break;
             case 64:
                 this.el.innerHTML = "🍒"
-                this.el.style.backgroundColor = "#edcf72";
-                this.el.style.color = "#f9f6f2";
+                this.el.style.backgroundColor = "#111";
                 break;
             case 128:
                 this.el.innerHTML = "🍑"
-                this.el.style.backgroundColor = "#edcc61";
-                this.el.style.color = "#f9f6f2";
+                this.el.style.backgroundColor = "#111";
                 break;
             case 256:
                 this.el.innerHTML = "🍍"
-                this.el.style.backgroundColor = "#edc850";
-                this.el.style.color = "#f9f6f2";
+                this.el.style.backgroundColor = "#111";
                 break;
             default:
                 this.el.innerHTML = ""
