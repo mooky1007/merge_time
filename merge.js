@@ -28,6 +28,10 @@ class Board {
         this.blocks.forEach((_, idx) => {
             this.blocks[idx] = new Block(idx, this);
             this.el.appendChild(this.blocks[idx].el);
+
+            const tile = document.createElement('div');
+            tile.classList.add('tile');
+            document.querySelector('.tiles').appendChild(tile);
         });
 
         this.setMouseEvent();
@@ -181,7 +185,11 @@ class Board {
     mergeItem(from, to){
         to.data.level += 1;
         from.data.level = null;
+        to.el.classList.add('scaleUp');
         this.render();
+        setTimeout(() => {
+            to.el.classList.remove('scaleUp');
+        }, 500);
     }
 
     changeItem(from, to) {
@@ -198,7 +206,6 @@ class Board {
         this.setTouchPosition(e);
 
         if(!this.clone) return;
-        this.clone.style.border = "1px solid #fff";
         this.clone.style.left = `${this.touchPos.x - this.clone.offsetWidth/2}px`;
         this.clone.style.top = `${this.touchPos.y - this.clone.offsetHeight}px`;
 
@@ -280,7 +287,11 @@ class Board {
         const emptyBlocks = this.blocks.filter(block => block.data.level === null);
         const randomBlock = emptyBlocks[Math.floor(Math.random() * emptyBlocks.length)];
         randomBlock.data.level = Math.floor(Math.random() * (this.upgradeLevel + 1) + 1);
+        randomBlock.el.classList.add('scaleUp');
         randomBlock.render();
+        setTimeout(() => {
+            randomBlock.el.classList.remove('scaleUp');
+        }, 500);
     }
 
     createOrderItem() {
