@@ -1,7 +1,7 @@
 class Board {
     constructor(el) {
         this.el = document.querySelector(el);
-        this.blocks = new Array(36).fill(null);
+        this.blocks = new Array(49).fill(null);
         this.gold = 50;
         this.upgradeLevel = 0;
         this.orderList = [];
@@ -217,7 +217,7 @@ class Board {
         if(this.orderList.length > 5) return;
 
         this.orderList.push(new OrderList({
-            time: (randomItem + 1) * 10000,
+            time: (randomItem + 1) * 15000,
             gold: 2**randomItem * 20,
             needItem: 2**randomItem,
             needCnt: Math.floor(Math.random() * (4 - 1) + 1)
@@ -232,7 +232,7 @@ class Board {
             const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/20) + 2)));
             this.orderList.push(new OrderList({
                 id: new Date().getTime(),
-                time: (randomItem + 1) * 10000,
+                time: (randomItem + 1) * 15000,
                 gold: 2**randomItem * 20,
                 needItem: 2**randomItem,
                 needCnt: Math.floor(Math.random() * (4 - 1) + 1)
@@ -280,63 +280,62 @@ class Block {
         switch(this.data.level) {
             case 1:
                 this.el.innerHTML = "🍎"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 2:
                 this.el.innerHTML = "🍊"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 4:
                 this.el.innerHTML = "🍋"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 8:
                 this.el.innerHTML = "🍉"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 16:
                 this.el.innerHTML = "🍇"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 32:
                 this.el.innerHTML = "🍓"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 64:
                 this.el.innerHTML = "🍒"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 128:
                 this.el.innerHTML = "🍑"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 256:
                 this.el.innerHTML = "🍍"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 512:
                 this.el.innerHTML = "🍌"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 1024:
                 this.el.innerHTML = "🍐"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 2048:
                 this.el.innerHTML = "🍈"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 4096:
                 this.el.innerHTML = "🍏"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             case 8192:
                 this.el.innerHTML = "🍅"
-                this.el.style.backgroundColor = "#111";
+                // this.el.style.backgroundColor = "#111";
                 break;
             default:
                 this.el.innerHTML = ""
-                this.el.style.backgroundColor = "#000";
                 break;
         }
     }

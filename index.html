@@ -27,23 +27,23 @@
                 <span>주문서 속도 :</span>
                 <span class="order_duration">15s</span>
             </p> -->
-            <p>
-                <span>최대 주문서 갯수 :</span>
-                <span class="max_order">2</span>
-            </p>
         </div>
-        <div class="board"></div>
+        <div class="squre">
+            <div class="board"></div>
+        </div>
         <div class="button_wrap">
             <button type="button" id="buyItem">아이템 생성</button>
-            <button type="button" id="upgrade1">아이템 생성 레벨업 (100 Gold)</button>
-            <button type="button" id="upgrade2">주문서 생성 속도 레벨업 (500 Gold)</button>
-            <button type="button" id="upgrade3">최대 주문서 보유량 레벨업 (200 Gold)</button>
         </div>
     </div>
     <div class="order_list">
-        주문서 목록
+        주문 내역 (최대 <span class="max_order"></span>)
         <ul>
         </ul>
+    </div>
+    <div class="button_wrap">
+        <button type="button" id="upgrade1">아이템 생성 레벨업 (100 Gold)</button>
+        <button type="button" id="upgrade2">주문서 생성 속도 레벨업 (500 Gold)</button>
+        <button type="button" id="upgrade3">최대 주문서 보유량 레벨업 (200 Gold)</button>
     </div>
     <script>
         const board = new Board('.board');
