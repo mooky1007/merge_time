@@ -25,7 +25,7 @@ body {
 
 .tossFace {font-family: Tossface;}
 
-.gold {
+.gold, .fame {
     min-width: 40px;
     display: inline-flex;
     justify-content: flex-end;

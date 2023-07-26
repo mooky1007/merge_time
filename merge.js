@@ -98,9 +98,9 @@ class Board {
         this.buttons.upgrade2.querySelector('.price').innerHTML = (((12000 - this.orderDuration)/1000 + 1) * 500).toLocaleString();
         this.buttons.upgrade3.querySelector('.price').innerHTML = (((this.maxOrder - 2) * 300) + 300).toLocaleString();
         this.buttons.upgrade4.querySelector('.price').innerHTML = (this.orderLastTime * 300 + 200).toLocaleString();
+        document.querySelector('.fame').innerHTML = this.fame.toLocaleString();
         // document.querySelector('.max_order').innerHTML = `${this.maxOrder}개`;
         // document.querySelector('.up_level').innerHTML = this.upgradeLevel;
-        // document.querySelector('.fame').innerHTML = this.fame;
         // document.querySelector('.order_duration').innerHTML = `${this.orderDuration / 1000}초`;
     }
 
@@ -302,7 +302,7 @@ class Board {
 
         this.orderList.push(new OrderList({
             time: (randomItem + 1) * 15000 + this.orderLastTime * 5000,
-            gold: (randomItem + 1) * 20,
+            gold: 2**(randomItem) * 20,
             needItem: randomItem,
             needCnt: Math.floor(Math.random() * (5 - 1) + 1)
         }, this));
@@ -426,7 +426,7 @@ class OrderList {
 
         // needItem.innerHTML = this.board.emogeArr[this.data.needItem].repeat(this.data.needCnt);
         needItem.innerHTML = `${this.board.emogeArr[this.data.needItem]} <span class="cnt_num">x ${this.data.needCnt}</span>`
-        buyPrice.innerHTML = `${(+this.data.gold * +this.data.needCnt * 2**(+this.data.needItem)).toLocaleString()}<span style="font-size:10px;">원</span>`;
+        buyPrice.innerHTML = `${(+this.data.gold * +this.data.needCnt).toLocaleString()}<span style="font-size:10px;">원</span>`;
         button.innerHTML = '판매';
         button.classList.add('sell');
         button2.innerHTML = '삭제';
@@ -437,7 +437,7 @@ class OrderList {
         button.addEventListener('click', e => {
             if(this.board.blocks.filter(block => +block.data.level === +(this.data.needItem + 1)).length < this.data.needCnt) return;
 
-            this.board.gold += (+this.data.gold * +this.data.needCnt * 2**(this.data.needItem));
+            this.board.gold += (+this.data.gold * +this.data.needCnt);
             this.board.fame += Math.floor((+this.data.gold * +this.data.needCnt)/5);
             if(this.board.fame > 10000){ board.fame = 10000; }
 
