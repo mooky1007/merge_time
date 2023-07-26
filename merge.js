@@ -7,7 +7,17 @@ class Board {
         this.orderList = [];
         this.maxOrder = 2;
         this.fame = 0;
-        this.orderDuration = 10000;
+        this.orderDuration = 16000;
+        this.orderLastTime = 0;
+        this.emogeArr = ["🍎","🍊","🍋","🍉","🍇","🍓","🍒","🍑","🍍","🍌","🍐","🍈","🍏","🍅"]
+
+        this.buttons = {
+            buyItem: document.querySelector('#buyItem'),
+            upgrade1: document.querySelector('#upgrade1'),
+            upgrade2: document.querySelector('#upgrade2'),
+            upgrade3: document.querySelector('#upgrade3'),
+            upgrade4: document.querySelector('#upgrade4')
+        }
 
         this.init();
         this.orderTimer();
@@ -16,228 +26,254 @@ class Board {
 
     init() {
         this.blocks.forEach((_, idx) => {
-            this.blocks[idx] = new Block(idx);
+            this.blocks[idx] = new Block(idx, this);
+            this.el.appendChild(this.blocks[idx].el);
         });
 
-        this.el.innerHTML = '';
-        this.blocks.forEach((block, idx) => {
-            this.el.appendChild(block.el);
+        this.setMouseEvent();
+        this.setTouchEvent();
 
-            block.el.addEventListener('click', e => {
-                if(this.touchStart) return;
-
-                // dobule click
-                if(block.clicked) {
-                    if(this.touchStart) return;
-                    this.gold += block.data.level * 5;
-                    block.data.level = null;
-                    this.render();
-                    return;
-                }
-    
-                block.clicked = true;
-                
-                setTimeout(() => {
-                    block.clicked = false;
-                }, 300);
-                
-            })
-    
-            block.el.addEventListener('touchstart', e => {
-                block.el.classList.remove('drag-on');
-
-                if(block.data.level === null) return;
-                // dobule touch
-                if(block.touched) {
-                    this.gold += block.data.level * 5;
-                    block.data.level = null;
-                    this.render();
-                    return;
-                }
-    
-                block.touched = true;
-                
-                setTimeout(() => {
-                    block.touched = false;
-                }, 300);
-                
-            })
-
-            block.el.addEventListener('dragenter', e => {
-                document.querySelectorAll('.drag-on').forEach(el => {
-                    el.classList.remove('drag-on');
-                });
-                block.el.classList.add('drag-on');
-            })
-    
-            block.el.addEventListener('dragend', e => {
-                if(!document.querySelector('.drag-on')) return;
-    
-                const fromEl = block;
-                const toEl = this.blocks[document.querySelector('.drag-on').id];
-    
-                if(fromEl.id === toEl.id) {
-                    toEl.el.classList.remove('drag-on');
-                    return;
-                }
-
-                if(toEl.el.innerHTML !== ""){
-                    if(toEl.data.level === fromEl.data.level){
-                        toEl.data.level *= 2;
-                        fromEl.data.level = null;
-                    }else{
-                        const temp = toEl.data.level;
-                        toEl.data.level = fromEl.data.level;
-                        fromEl.data.level = temp;
-                    }
-                }else{
-                    const temp = toEl.data.level;
-                    toEl.data.level = fromEl.data.level;
-                    fromEl.data.level = temp;
-                }
-                this.render();
-    
-                toEl.el.classList.remove('drag-on');
-            })
-
-            block.el.addEventListener('touchstart', e => {
-                e.preventDefault();
-                this.touchPos = {
-                    x: e.touches[0].clientX,
-                    y: e.touches[0].clientY
-                }
-                
-                this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
-
-
-                if(block.data.level === null) return;
-                this.clone?.remove();
-
-                this.touchStart = true;
-                this.clone = block.createClone();
-                this.el.appendChild(this.clone);
-                block.el.style.opacity = 0.3;
-            })
-
-            block.el.addEventListener('touchend', e => {
-                e.preventDefault();
-                this.blocks.forEach(block => {
-                    block.el.classList.remove('touch_on');
-                });
-
-                this.touchPos = {
-                    x: e.changedTouches[0].clientX,
-                    y: e.changedTouches[0].clientY
-                }
-                this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
-
-                this.clone?.remove();
-
-                if(!this.touchedTarget?.classList.contains('block')) return;
-                // if(!document.querySelector('.drag-on')) return;
-
-                const fromEl = block;
-                const toEl = this.blocks[this.touchedTarget.id];
-
-                if(+fromEl.id === +toEl.id) {
-                    block.el.style.opacity = 1;
-                    this.clone?.remove();
-                    this.touchStart = false;
-                    return;
-                }
-
-                if(toEl.el.innerHTML !== ""){
-                    if(toEl.data.level === fromEl.data.level){
-                        toEl.data.level *= 2;
-                        fromEl.data.level = null;
-                    }else{
-                        const temp = toEl.data.level;
-                        toEl.data.level = fromEl.data.level;
-                        fromEl.data.level = temp;
-                    }
-                }else{
-                    const temp = toEl.data.level;
-                    toEl.data.level = fromEl.data.level;
-                    fromEl.data.level = temp;
-                }
-                this.render();
-
-                this.touchStart = false;
-
-                block.el.style.opacity = 1;
-                this.clone?.remove();
-            })
-        });
-
-        this.el.addEventListener('touchmove', e => {
-            e.preventDefault();
-
-            this.touchPos = {
-                x: e.touches[0].clientX,
-                y: e.touches[0].clientY
-            }
-
-            if(!this.clone) return;
-            this.clone.style.left = `${this.touchPos.x - this.clone.offsetWidth/2}px`;
-            this.clone.style.top = `${this.touchPos.y - this.clone.offsetHeight/2}px`;
-
-            this.blocks.forEach(block => {
-                block.el.classList.remove('touch_on');
-            });
-            this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
-            
-            if(!this.touchedTarget?.classList.contains('block')) {
-                this.clone?.remove();
-                this.blocks.forEach(block => {
-                    block.el.style = "";
-                }); 
-                return;
-            }
-            this.touchedTarget.classList.add('touch_on');
-        })
-
-        document.querySelector('#buyItem').addEventListener('click', e => {
+        this.buttons.buyItem.addEventListener('click', e => {
             if(this.gold < 10) return;
             this.gold -= 10;
             this.createRandomBlock();
             this.render();
         })
 
-        document.querySelector('#upgrade1').addEventListener('click', e => {
-            if(this.gold <= 100) return;
-            if(this.upgradeLevel >= 2) return;
-            this.gold -= 100;
+        this.buttons.upgrade1.addEventListener('click', e => {
+            if(this.gold <= this.upgradeLevel * 200 + 200) return;
+            if(this.upgradeLevel >= 4) {
+                this.buttons.upgrade1.style.display = "none";
+                return;
+            };
+            this.gold -= this.upgradeLevel * 200 + 200;
             this.upgradeLevel++;
             this.render();
         })
 
-        document.querySelector('#upgrade2').addEventListener('click', e => {
-            if(this.gold <= 500) return;
-            if(this.orderDuration <= 3000) return;
-            this.gold -= 500;
+        this.buttons.upgrade2.addEventListener('click', e => {
+            if(this.gold <= ((16000 - this.orderDuration)/1000 + 1) * 1000) return;
+            if(this.orderDuration <= 5000){
+                this.buttons.upgrade2.style.display = "none";
+                return;
+            };
+            this.gold -= ((16000 - this.orderDuration)/1000 + 1) * 1000;
             this.orderDuration -= 1000;
             this.updateOrderTimer();
             this.render();
         });
 
-        document.querySelector('#upgrade3').addEventListener('click', e => {
-            if(this.gold <= 200) return;
-            if(this.maxOrder >= 5) return;
-            this.gold -= 200;
+        this.buttons.upgrade3.addEventListener('click', e => {
+            if(this.gold <= ((2 - this.maxOrder) * 200) + 200) return;
+            if(this.maxOrder >= 5){
+                this.buttons.upgrade3.style.display = "none";
+                return;
+            };
+            this.gold -= ((2 - this.maxOrder) * 200) + 200;
             this.maxOrder++;
+            this.render();
+        });
+
+        this.buttons.upgrade4.addEventListener('click', e => {
+            if(this.gold <= this.orderLastTime * 300 + 200) return;
+            if(this.orderLastTime >= 5) {
+                this.buttons.upgrade4.style.display = "none";
+                return;
+            };
+            this.gold -= this.orderLastTime * 300 + 200;
+            this.orderLastTime++;
             this.render();
         });
     }
 
     render() {
-        this.blocks.forEach(block => {
-            block.render();
-        });
-        document.querySelector('.gold').innerHTML = `${this.gold.toLocaleString()}원`;
-        document.querySelector('.max_order').innerHTML = `${this.maxOrder}개`;
+        this.blocks.forEach(block => block.render());
+        document.querySelector('.gold').innerHTML = `${this.gold.toLocaleString()}`;
+        this.buttons.upgrade1.querySelector('.price').innerHTML = (this.upgradeLevel * 200 + 200).toLocaleString();
+        this.buttons.upgrade2.querySelector('.price').innerHTML = (((16000 - this.orderDuration)/1000 + 1) * 1000).toLocaleString();
+        this.buttons.upgrade3.querySelector('.price').innerHTML = (((2 - this.maxOrder) * 200) + 200).toLocaleString();
+        this.buttons.upgrade4.querySelector('.price').innerHTML = (this.orderLastTime * 300 + 200).toLocaleString();
+        // document.querySelector('.max_order').innerHTML = `${this.maxOrder}개`;
         // document.querySelector('.up_level').innerHTML = this.upgradeLevel;
         // document.querySelector('.fame').innerHTML = this.fame;
         // document.querySelector('.order_duration').innerHTML = `${this.orderDuration / 1000}초`;
+    }
+
+    setMouseEvent() {
+        this.blocks.forEach((block, idx) => {
+            block.el.addEventListener('click', e => this.dobleClick(block));
+            block.el.addEventListener('dragenter', e => this.dragEnter(block));
+            block.el.addEventListener('dragend', e => this.dragEnd(block));
+        });
+    }
+
+    setTouchEvent() {
+        this.blocks.forEach((block, idx) => {
+            block.el.addEventListener('touchstart', e => this.doubleTouch(block));
+            block.el.addEventListener('touchstart', e => this.touchStart(e, block));
+            block.el.addEventListener('touchend', e => this.touchDrop(e, block));
+        });
+
+        this.el.addEventListener('touchmove', e => this.touchMove(e));
+    }
+
+    dobleClick(block) {
+        if(this.isTouchStart) return;
+
+        if(block.clicked) {
+            if(this.isTouchStart) return;
+            this.gold += block.data.level * 5;
+            block.data.level = null;
+            this.render();
+            return;
+        }
+
+        block.clicked = true;
+        
+        setTimeout(() => {
+            block.clicked = false;
+        }, 300);
+    }
+
+    dragEnter(block) {
+        document.querySelectorAll('.drag-on').forEach(el => {
+            el.classList.remove('drag-on');
+        });
+        block.el.classList.add('drag-on');
+    }
+
+    dragEnd(block) {
+        if(!document.querySelector('.drag-on')) return;
+
+        const fromEl = block;
+        const toEl = this.blocks[document.querySelector('.drag-on').id];
+
+        if(fromEl.id === toEl.id) {
+            toEl.el.classList.remove('drag-on');
+            return;
+        }
+
+        toEl.el.innerHTML !== ""
+        && toEl.data.level === fromEl.data.level
+            ? this.mergeItem(fromEl, toEl)
+            : this.changeItem(fromEl, toEl);
+    }
+
+    doubleTouch(block) {
+        block.el.classList.remove('drag-on');
+
+        if(block.data.level === null) return;
+        // dobule touch
+        if(block.touched) {
+            this.gold += block.data.level * 5;
+            block.data.level = null;
+            this.render();
+            return;
+        }
+
+        block.touched = true;
+        
+        setTimeout(() => {
+            block.touched = false;
+        }, 300);
+    }
+
+    mergeItem(from, to){
+        to.data.level += 1;
+        from.data.level = null;
+        this.render();
+    }
+
+    changeItem(from, to) {
+        const temp = to.data.level;
+        to.data.level = from.data.level;
+        from.data.level = temp;
+
+        to.el.classList.remove('drag-on');
+        this.render();
+    }
+
+    touchMove(e){
+        e.preventDefault();
+        this.setTouchPosition(e);
+
+        if(!this.clone) return;
+        this.clone.style.border = "1px solid #fff";
+        this.clone.style.left = `${this.touchPos.x - this.clone.offsetWidth/2}px`;
+        this.clone.style.top = `${this.touchPos.y - this.clone.offsetHeight}px`;
+
+        this.clearTouchOn();
+        this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
+        
+        if(!this.touchedTarget?.classList.contains('block')) {
+            this.clone?.remove();
+            this.blocks.forEach(block => {
+                block.el.style = "";
+            }); 
+            return;
+        }
+
+        this.touchedTarget.classList.add('touch_on');
+    }
+
+    touchStart(e, block) {
+        e.preventDefault();
+        console.log(block)
+
+        this.setTouchPosition(e);
+        this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
+
+
+        if(block.data.level === null) return;
+        this.clone?.remove();
+
+        this.isTouchStart = true;
+        this.clone = block.createClone();
+        this.el.appendChild(this.clone);
+        block.el.style.opacity = 0.3;
+    }
+
+    touchDrop(e, block) {
+        e.preventDefault();
+        this.clearTouchOn();
+
+        this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
+        this.clone?.remove();
+
+        if(!this.touchedTarget?.classList.contains('block')) return;
+
+        const fromEl = block;
+        const toEl = this.blocks[this.touchedTarget.id];
+
+        if(+fromEl.id === +toEl.id) {
+            block.el.style.opacity = 1;
+            this.clone?.remove();
+            this.isTouchStart = false;
+            return;
+        }
+
+        toEl.el.innerHTML !== ""
+        && toEl.data.level === fromEl.data.level
+            ? this.mergeItem(fromEl, toEl)
+            : this.changeItem(fromEl, toEl);
+
+        this.isTouchStart = false;
+
+        block.el.style.opacity = 1;
+        this.clone?.remove();
+    }
+
+    setTouchPosition(e) {
+        this.touchPos = {
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY
+        }
+    }
+
+    clearTouchOn() {
+        this.blocks.forEach(block => {
+            block.el.classList.remove('touch_on');
+        });
     }
 
     createRandomBlock() {
@@ -247,32 +283,28 @@ class Board {
         randomBlock.render();
     }
 
-    orderTimer() {
-        if(this.orderList.length >= this.maxOrder) return;
-
+    createOrderItem() {
         const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/500) + 3)));
 
         this.orderList.push(new OrderList({
-            time: (randomItem + 1) * 15000,
-            gold: 2**randomItem * 20,
-            needItem: 2**randomItem,
-            needCnt: Math.floor(Math.random() * (4 - 1) + 1)
-        }));
+            time: (randomItem + 1) * 15000 + this.orderLastTime * 5000,
+            gold: (randomItem + 1) * 20,
+            needItem: randomItem,
+            needCnt: Math.floor(Math.random() * (5 - 1) + 1)
+        }, this));
+    }
 
+    orderTimer() {
+        if(this.orderList.length >= this.maxOrder) return;
+
+        this.createOrderItem();
         this.createOrderTimer();
     }
 
     createOrderTimer() {
         this.orderTimerObj = setInterval(() => {
             if(this.orderList.length > this.maxOrder) return;
-            const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/500) + 3)));
-            this.orderList.push(new OrderList({
-                id: new Date().getTime(),
-                time: (randomItem + 1) * 15000,
-                gold: 2**randomItem * 20,
-                needItem: 2**randomItem,
-                needCnt: Math.floor(Math.random() * (4 - 1) + 1)
-            }));
+            this.createOrderItem();
         }, this.orderDuration);
     }
 
@@ -287,7 +319,8 @@ class Board {
 }
 
 class Block {
-    constructor(id) {
+    constructor(id, board) {
+        this.board = board;
         this.id = id;
         this.el = null;
         this.clicked = false;
@@ -307,81 +340,14 @@ class Block {
         this.el = div;
     }
 
-    setLevel(level) {
-        this.data.level = level;
-    }
-
     render() {
-        // this.el.innerHTML = this.data.level;
-        switch(this.data.level) {
-            case 1:
-                this.el.innerHTML = "🍎"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 2:
-                this.el.innerHTML = "🍊"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 4:
-                this.el.innerHTML = "🍋"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 8:
-                this.el.innerHTML = "🍉"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 16:
-                this.el.innerHTML = "🍇"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 32:
-                this.el.innerHTML = "🍓"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 64:
-                this.el.innerHTML = "🍒"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 128:
-                this.el.innerHTML = "🍑"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 256:
-                this.el.innerHTML = "🍍"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 512:
-                this.el.innerHTML = "🍌"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 1024:
-                this.el.innerHTML = "🍐"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 2048:
-                this.el.innerHTML = "🍈"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 4096:
-                this.el.innerHTML = "🍏"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            case 8192:
-                this.el.innerHTML = "🍅"
-                // this.el.style.backgroundColor = "#111";
-                break;
-            default:
-                this.el.innerHTML = ""
-                break;
-        }
+        this.el.innerHTML = this.board.emogeArr[this.data.level - 1] || "";
     }
 
     createClone() {
         const clone = this.el.cloneNode(true);
         clone.classList.add('clone');
         clone.style.cssText = `
-            width: ${this.el.offsetWidth}px;
-            height: ${this.el.offsetHeight}px;
             left: ${this.el.offsetLeft}px;
             top: ${this.el.offsetTop}px;
         `;
@@ -391,31 +357,15 @@ class Block {
 }
 
 class OrderList {
-    constructor(data) {
+    constructor(data, board) {
         this.id = data?.id || new Date().getTime();
         this.el = document.querySelector(`.order_list ul`);
         this.item = null;
         this.needCnt = data?.needCnt || 1;
         this.time = data?.time || 60000;
+        this.board = board;
 
         this.data = data;
-
-        this.emogeArr = {
-            "1": "🍎",
-            "2": "🍊",
-            "4": "🍋",
-            "8": "🍉",
-            "16": "🍇",
-            "32": "🍓",
-            "64": "🍒",
-            "128": "🍑",
-            "256": "🍍",
-            "512": "🍌",
-            "1024": "🍐",
-            "2048": "🍈",
-            "4096": "🍏",
-            "8192": "🍅"
-        }
         this.init();
     }
 
@@ -442,10 +392,12 @@ class OrderList {
         const min = document.createElement('span');
         const sec = document.createElement('span');
         const button = document.createElement('button');
+        const button2 = document.createElement('button');
         
         li.appendChild(needItem);
         li.appendChild(buyPrice);
         li.appendChild(button);
+        li.appendChild(button2);
         li.appendChild(time);
         time.appendChild(min);
         time.appendChild(sec);
@@ -457,36 +409,46 @@ class OrderList {
         min.classList.add('min');
         sec.classList.add('sec');
 
-        needItem.innerHTML = this.emogeArr[this.data.needItem].repeat(this.data.needCnt);
-        buyPrice.innerHTML = `${(+this.data.gold * +this.data.needCnt).toLocaleString()} 원`;
+        // needItem.innerHTML = this.board.emogeArr[this.data.needItem].repeat(this.data.needCnt);
+        needItem.innerHTML = `${this.board.emogeArr[this.data.needItem]} <span class="cnt_num">x ${this.data.needCnt}</span>`
+        buyPrice.innerHTML = `${(+this.data.gold * +this.data.needCnt).toLocaleString()}<span style="font-size:10px;">원</span>`;
         button.innerHTML = '판매';
+        button2.innerHTML = '삭제';
+        button2.style.marginLeft = "0";
         min.innerHTML = this.data.time / 60000 > 9 ? Math.floor(this.data.time / 60000) : `0${Math.floor(this.data.time / 60000)}`;
         sec.innerHTML = this.data.time % 60000 > 9 ? Math.floor((this.data.time % 60000) / 1000) : `0${Math.floor((this.data.time % 60000) / 1000)}`;
 
         button.addEventListener('click', e => {
-            if(board.blocks.filter(block => +block.data.level === +this.data.needItem).length < this.data.needCnt) return;
+            if(this.board.blocks.filter(block => +block.data.level === +(this.data.needItem + 1)).length < this.data.needCnt) return;
 
-            board.gold += (+this.data.gold * +this.data.needCnt);
-            board.fame += Math.floor((+this.data.gold * +this.data.needCnt)/10);
-            if(board.fame > 1000){ board.fame = 1000; }
+            this.board.gold += (+this.data.gold * +this.data.needCnt);
+            this.board.fame += Math.floor((+this.data.gold * +this.data.needCnt)/10);
+            if(this.board.fame > 1000){ board.fame = 1000; }
 
             let cnt = 0;
 
             for(let i = 0; i < board.blocks.length; i++) {
-                if(+board.blocks[i].data.level === +this.data.needItem) {
+                if(+board.blocks[i].data.level === +(this.data.needItem + 1)) {
                     board.blocks[i].data.level = null;
                     cnt++;
 
-                    if(cnt === this.data.needCnt) {
-                        break;
-                    }
+                    if(cnt === this.data.needCnt) break;
                 }
             }
 
             this.item.remove();
-            board.orderList = board.orderList.filter(order => order.id !== this.id);
-            board.render();
+            this.board.orderList = this.board.orderList.filter(order => order.id !== this.id);
+            this.board.render();
             this.render();
+        });
+
+        button2.addEventListener('click', e => {
+            if(this.board.gold < 5) return;
+            this.item.remove();
+            this.board.orderList = this.board.orderList.filter(order => order.id !== this.id);
+            this.board.render();
+            this.board.gold -= 5;
+            this.board.render();
         });
 
         this.item = li;

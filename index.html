@@ -12,8 +12,9 @@
     <div class="row">
         <div class="status">
             <p>
-                <span>현금 :</span>
+                <span class="tossFace">💰</span>
                 <span class="gold">0</span>
+                <span style="font-size:12px;">원</span>
             </p>
             <!-- <p>
                 <span>업그레이드 레벨 :</span>
@@ -32,18 +33,20 @@
             <div class="board"></div>
         </div>
         <div class="button_wrap">
-            <button type="button" id="buyItem">아이템 생성</button>
+            <button type="button" id="buyItem"><span class="tossFace" style="margin-right:5px;">🌱</span>과일 만들기</button>
         </div>
     </div>
     <div class="order_list">
-        주문 내역 (최대 <span class="max_order"></span>)
+        <h2>주문 내역</h2>
         <ul>
         </ul>
     </div>
     <div class="button_wrap">
-        <button type="button" id="upgrade1">아이템 생성 레벨업 (100 Gold)</button>
-        <button type="button" id="upgrade2">주문서 생성 속도 레벨업 (500 Gold)</button>
-        <button type="button" id="upgrade3">최대 주문서 보유량 레벨업 (200 Gold)</button>
+        <h2>업그레이드</h2>
+        <button type="button" id="upgrade1"><span class="tossFace" style="margin-right:5px;">🔥</span>아이템 생성 레벨업<span class="price">0</span><span style="font-size:10px;">원</span></button>
+        <button type="button" id="upgrade2"><span class="tossFace" style="margin-right:5px;">🕖</span>주문서 생성 속도 레벨업<span class="price">0</span><span style="font-size:10px;">원</span></button>
+        <button type="button" id="upgrade3"><span class="tossFace" style="margin-right:5px;">📑</span>최대 주문서 보유량 레벨업<span class="price">0</span><span style="font-size:10px;">원</span></button>
+        <button type="button" id="upgrade4"><span class="tossFace" style="margin-right:5px;">🪑</span>주문서 대기시간 증가<span class="price">0</span><span style="font-size:10px;">원</span></button>
     </div>
     <script>
         const board = new Board('.board');

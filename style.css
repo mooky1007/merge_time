@@ -23,6 +23,14 @@ body {
     gap: 30px;
 }
 
+.tossFace {font-family: Tossface;}
+
+.gold {
+    min-width: 40px;
+    display: inline-flex;
+    justify-content: flex-end;
+}
+
 .row {
     display: flex;
     justify-content: center;
@@ -81,6 +89,8 @@ body {
 
 .status {
     width: 600px;
+    display: flex;
+    justify-content: flex-end;
     color: #fff;
     padding: 0px 0 10px;
 }
@@ -98,19 +108,18 @@ body {
 .button_wrap button {
     width: 100%;
     max-width: 600px;
-    background: #fff;
-    color: #000;
+    background: #111;
+    color: #fff;
     box-shadow: none;
     outline: none;
     border-radius: 5px;
     border: none;
 
-    padding: 10px 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 20px;
     cursor: pointer;
-}
-
-.button_wrap button:hover {
-    background: #ddd;
 }
 
 .order_list {
@@ -178,6 +187,20 @@ body {
 #buyItem {
     height: 42px;
     font-size: 13px;
+    background: #2e7754;
+    color: #fff;
+    margin-bottom: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.cnt_num {
+    width: 14px;
+    display: inline-flex;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: left;
+    font-size: 10px;
 }
 
 @media screen and (max-width: 720px) {
@@ -197,6 +220,7 @@ body {
         width: 100%;
         height: 100vh;
         padding: 20px 5%;
+        gap: 10px;
     }
 
     .row {
@@ -231,30 +255,49 @@ body {
     }
 
     .button_wrap {
-        flex-wrap: nowrap;
+        padding: 10px 0;
     }
 
     .button_wrap button {
-        font-size: 10px;
-        height: 32px;
-        padding: 0;
+        font-size: 12px;
+        height: 42px;
+        background: #111;
+        color: #fff;
+        padding: 10px 20px;
         word-break: keep-all;
+    }
+
+    .button_wrap button .price {
+        margin-left: auto;
+    }
+    
+    h2 {
+        color: #fff;
+        text-align: left;
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        font-size: 13px;
+        padding-left: 10px;
     }
 
     .order_list ul {
         width: 100%;
         overflow: auto;
+        padding: 10px 0;
     }
 
     .order_list ul li {
         width: 100%;
         padding: 10px 20px;
+        font-size: 12px;
     }
 
     .order_list ul li.order {
         flex-direction: row;
+        justify-content: flex-start;
         align-items: center;
-        gap: 20px;
+        gap: 10px;
     }
 
     .order_list ul li .time {
@@ -273,5 +316,6 @@ body {
         bottom: inherit;
         left: inherit;
         order: 4;
+        font-size: 11px;
     }
 }
