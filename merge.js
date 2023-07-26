@@ -152,8 +152,8 @@ class Board {
                 x: e.touches[0].clientX,
                 y: e.touches[0].clientY
             }
-            this.clone.style.left = `${this.touchPos.x}px`;
-            this.clone.style.top = `${this.touchPos.y}px`;
+            this.clone.style.left = `${this.touchPos.x - this.clone.offsetWidth/2}px`;
+            this.clone.style.top = `${this.touchPos.y - this.clone.offsetHeight/2}px`;
 
             this.touchedTarget = document.elementFromPoint(this.touchPos.x, this.touchPos.y);
             
