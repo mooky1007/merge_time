@@ -168,6 +168,7 @@ class Board {
 
         document.querySelector('#upgrade1').addEventListener('click', e => {
             if(this.gold <= 100) return;
+            if(this.upgradeLevel >= 2) return;
             this.gold -= 100;
             this.upgradeLevel++;
             this.render();
@@ -313,6 +314,26 @@ class Block {
                 this.el.innerHTML = "🍍"
                 this.el.style.backgroundColor = "#111";
                 break;
+            case 512:
+                this.el.innerHTML = "🍌"
+                this.el.style.backgroundColor = "#111";
+                break;
+            case 1024:
+                this.el.innerHTML = "🍐"
+                this.el.style.backgroundColor = "#111";
+                break;
+            case 2048:
+                this.el.innerHTML = "🍈"
+                this.el.style.backgroundColor = "#111";
+                break;
+            case 4096:
+                this.el.innerHTML = "🍏"
+                this.el.style.backgroundColor = "#111";
+                break;
+            case 8192:
+                this.el.innerHTML = "🍅"
+                this.el.style.backgroundColor = "#111";
+                break;
             default:
                 this.el.innerHTML = ""
                 this.el.style.backgroundColor = "#000";
@@ -353,7 +374,12 @@ class OrderList {
             "32": "🍓",
             "64": "🍒",
             "128": "🍑",
-            "256": "🍍"
+            "256": "🍍",
+            "512": "🍌",
+            "1024": "🍐",
+            "2048": "🍈",
+            "4096": "🍏",
+            "8192": "🍅"
         }
         this.init();
     }
@@ -407,6 +433,7 @@ class OrderList {
 
             board.gold += (+this.data.gold * +this.data.needCnt);
             board.fame += Math.floor((+this.data.gold * +this.data.needCnt)/10);
+            if(board.fame > 1000){ board.fame = 1000; }
 
             let cnt = 0;
 
