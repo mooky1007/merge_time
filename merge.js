@@ -435,7 +435,7 @@ class OrderList {
         button.addEventListener('click', e => {
             if(this.board.blocks.filter(block => +block.data.level === +(this.data.needItem + 1)).length < this.data.needCnt) return;
 
-            this.board.gold += (+this.data.gold * +this.data.needCnt * +this.data.needItem + 1);
+            this.board.gold += (+this.data.gold * +this.data.needCnt * +(this.data.needItem + 1));
             this.board.fame += Math.floor((+this.data.gold * +this.data.needCnt)/5);
             if(this.board.fame > 10000){ board.fame = 10000; }
 
