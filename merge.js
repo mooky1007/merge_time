@@ -185,7 +185,7 @@ class Board {
     }
 
     mergeItem(from, to){
-        to.data.level += 1;
+        to.setLevel(to.data.level + 1);
         from.data.level = null;
         to.el.classList.add('scaleUp');
         this.render();
@@ -302,7 +302,7 @@ class Board {
             randomBlock = emptyBlocks[Math.floor(Math.random() * emptyBlocks1.length)];
         }
 
-        randomBlock.data.level = Math.floor(Math.random() * (this.upgradeLevel + 1) + 1);
+        randomBlock.setLevel(Math.floor(Math.random() * (this.upgradeLevel + 1) + 1));
         randomBlock.el.classList.add('scaleUp');
         randomBlock.render();
         setTimeout(() => {
@@ -354,9 +354,13 @@ class Block {
         this.clicked = false;
         this.data = {
             type: 0,
-            level: null
+            level: null,
+            price: 0,
+            fame: 0,
         }
         this.create();
+
+        this.el.addEventListener('touchstart', e => console.log(this.data));
     }
 
     create() {
@@ -366,6 +370,12 @@ class Block {
         div.style.color = "#fff";
         div.draggable = true;
         this.el = div;
+    }
+
+    setLevel(level){
+        this.data.level = level;
+        this.data.price = 2**(level - 1) * 20;
+        this.data.fame = this.data.price / 5;
     }
 
     render() {
@@ -393,6 +403,8 @@ class OrderList {
         this.time = data?.time || 60000;
         this.board = board;
 
+        this.price = (+data.gold * +this.needCnt).toLocaleString();
+
         this.data = data;
         this.init();
     }
@@ -403,8 +415,7 @@ class OrderList {
         this.timer = setInterval(() => {
             this.time -= 1000;
             if(this.time <= 0) {
-                board.orderList = board.orderList.filter(order => order.id !== this.id);
-                this.item.remove();
+                this.removeOrder();
                 clearInterval(this.timer);
                 return;
             }
@@ -437,9 +448,8 @@ class OrderList {
         min.classList.add('min');
         sec.classList.add('sec');
 
-        // needItem.innerHTML = this.board.emogeArr[this.data.needItem].repeat(this.data.needCnt);
-        needItem.innerHTML = `${this.board.emogeArr[this.data.needItem]} <span class="cnt_num">x ${this.data.needCnt}</span>`
-        buyPrice.innerHTML = `${(+this.data.gold * +this.data.needCnt).toLocaleString()}<span style="font-size:10px;">원</span>`;
+        needItem.innerHTML = `${this.board.emogeArr[this.data.needItem]} <span class="cnt_num">x ${this.needCnt}</span>`
+        buyPrice.innerHTML = `${this.price}<span style="font-size:10px;">원</span>`;
         button.innerHTML = '판매';
         button.classList.add('sell');
         button2.innerHTML = '삭제';
@@ -473,15 +483,16 @@ class OrderList {
 
         button2.addEventListener('click', e => {
             if(this.board.gold < 5) return;
-            this.item.remove();
-            this.board.orderList = this.board.orderList.filter(order => order.id !== this.id);
             this.board.gold -= 5;
-            this.render();
-            this.board.render();
+            this.removeOrder();
         });
 
         this.item = li;
         this.el.appendChild(li);
+    }
+
+    sellItem() {
+        
     }
 
     render() {
@@ -500,5 +511,13 @@ class OrderList {
 
         if(this.board.orderList.length === 0) this.el.classList.add('no-order');
         else this.el.classList.remove('no-order');
+    }
+
+    removeOrder() {
+        this.item.remove();
+        this.board.orderList = this.board.orderList.filter(order => order.id !== this.id);
+        this.render();
+        this.board.fame -= Math.floor((+this.data.gold * +this.data.needCnt)/5);
+        this.board.render();
     }
 }
