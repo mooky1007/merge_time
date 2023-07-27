@@ -2,7 +2,7 @@ class Board {
     constructor(el) {
         this.defaultConfig = {
             orderDuration : 10000,
-            gold : 50,
+            gold : 100,
             fame : 0,
             fameLevel : 0,
             orderLastTime : 0,
@@ -26,6 +26,27 @@ class Board {
             maxOrder: 0,
             orderSpeed: 0,
             orderLastTime: 0
+        }
+
+        this.upgradeConfig = {
+            formula: (upgradeLevel, upgradePrice, pow = 3) => { return pow**(upgradeLevel) * upgradePrice},
+            newItem: {
+                price: 500,
+                maxLevel: 10,
+            },
+            maxOrder: {
+                price: 500,
+                maxLevel: 10,
+            },
+            orderSpeed: {
+                price: 1000,
+                maxLevel: 4,
+                pow: 5,
+            },
+            orderLastTime: {
+                price: 500,
+                maxLevel: 20,
+            }
         }
 
         this.buttons = {
@@ -73,46 +94,35 @@ class Board {
         })
 
         this.buttons.upgrade1.addEventListener('click', e => {
-            if(this.gold <= this.upgradeLevel.newItem * 400 + 400) return;
-            if(this.upgradeLevel.newItem >= 4) {
-                this.buttons.upgrade1.style.display = "none";
-                return;
-            };
-            this.gold -= this.upgradeLevel.newItem * 400 + 400;
+            const nextPrice = this.upgradeConfig.formula(this.upgradeLevel.newItem, this.upgradeConfig.newItem.price);
+            if(this.gold <= nextPrice) return;
+            this.gold -= nextPrice;
             this.upgradeLevel.newItem ++;
             this.render();
         })
 
         this.buttons.upgrade2.addEventListener('click', e => {
-            if(this.gold <= ((this.defaultConfig.orderDuration - this.orderDuration)/1000 + 1) * 500) return;
-            if(this.orderDuration <= 3000){
-                this.buttons.upgrade2.style.display = "none";
-                return;
-            };
-            this.gold -= ((this.defaultConfig.orderDuration - this.orderDuration)/1000 + 1) * 500;
-            this.orderDuration -= 1000;
+            const nextPrice = this.upgradeConfig.formula(this.upgradeLevel.orderSpeed, this.upgradeConfig.orderSpeed.price, this.upgradeConfig.orderSpeed.pow);
+            if(this.gold <= nextPrice) return;
+            this.gold -= nextPrice;
+            this.upgradeLevel.orderSpeed ++;
+            this.orderDuration = this.defaultConfig.orderDuration - (this.upgradeLevel.orderSpeed * 1000);
             this.updateOrderTimer();
             this.render();
         });
 
         this.buttons.upgrade3.addEventListener('click', e => {
-            if(this.gold <= ((this.upgradeLevel.maxOrder) * 300) + 300) return;
-            if(this.upgradeLevel.maxOrder >= 5){
-                this.buttons.upgrade3.style.display = "none";
-                return;
-            };
-            this.gold -= ((this.upgradeLevel.maxOrder) * 300) + 300;
+            const nextPrice = this.upgradeConfig.formula(this.upgradeLevel.maxOrder, this.upgradeConfig.maxOrder.price);
+            if(this.gold <= nextPrice) return;
+            this.gold -= nextPrice;
             this.upgradeLevel.maxOrder++;
             this.render();
         });
 
         this.buttons.upgrade4.addEventListener('click', e => {
-            if(this.gold <= this.orderLastTime * 300 + 200) return;
-            if(this.orderLastTime >= 5) {
-                this.buttons.upgrade4.style.display = "none";
-                return;
-            };
-            this.gold -= this.orderLastTime * 300 + 200;
+            const nextPrice = this.upgradeConfig.formula(this.orderLastTime, this.upgradeConfig.orderLastTime.price);
+            if(this.gold <= nextPrice) return;
+            this.gold -= nextPrice;
             this.orderLastTime++;
             this.render();
         });
@@ -124,15 +134,36 @@ class Board {
     render() {
         this.blocks.forEach(block => block.render());
         document.querySelector('.gold').innerHTML = `${this.gold.toLocaleString()}`;
-        this.buttons.upgrade1.querySelector('.price').innerHTML = (this.upgradeLevel.newItem * 400 + 400).toLocaleString();
-        this.buttons.upgrade2.querySelector('.price').innerHTML = (((this.defaultConfig.orderDuration - this.orderDuration)/1000 + 1) * 500).toLocaleString();
-        this.buttons.upgrade3.querySelector('.price').innerHTML = (((this.upgradeLevel.maxOrder) * 300) + 300).toLocaleString();
-        this.buttons.upgrade4.querySelector('.price').innerHTML = (this.orderLastTime * 300 + 200).toLocaleString();
+        this.buttons.upgrade1.querySelector('.price').innerHTML = this.upgradeConfig.formula(this.upgradeLevel.newItem, this.upgradeConfig.newItem.price).toLocaleString();
+        this.buttons.upgrade2.querySelector('.price').innerHTML = this.upgradeConfig.formula(this.upgradeLevel.orderSpeed, this.upgradeConfig.orderSpeed.price, this.upgradeConfig.orderSpeed.pow).toLocaleString();
+        this.buttons.upgrade3.querySelector('.price').innerHTML = this.upgradeConfig.formula(this.upgradeLevel.maxOrder, this.upgradeConfig.maxOrder.price).toLocaleString();
+        this.buttons.upgrade4.querySelector('.price').innerHTML = this.upgradeConfig.formula(this.orderLastTime, this.upgradeConfig.orderLastTime.price).toLocaleString();
         document.querySelector('.fame').innerHTML = this.fame.toLocaleString();
         document.querySelector('.fameLevel').innerHTML = (this.fameLevel + 1).toLocaleString();
         // document.querySelector('.max_order').innerHTML = `${this.maxOrder}개`;
         // document.querySelector('.up_level').innerHTML = this.upgradeLevel;
         // document.querySelector('.order_duration').innerHTML = `${this.orderDuration / 1000}초`;
+
+        if(+this.upgradeLevel.newItem >= +this.upgradeConfig.newItem.maxLevel) {
+            this.buttons.upgrade1.style.display = "none";
+            return;
+        };
+
+        if(+this.upgradeLevel.orderSpeed >= +this.upgradeConfig.orderSpeed.maxLevel) {
+            this.buttons.upgrade2.style.display = "none";
+            return;
+        };
+
+        if(+this.upgradeLevel.maxOrder >= +this.upgradeConfig.maxOrder.maxLevel) {
+            this.buttons.upgrade3.style.display = "none";
+            return;
+        };
+
+        if(+this.orderLastTime >= +this.upgradeConfig.orderLastTime.maxLevel) {
+            this.buttons.upgrade4.style.display = "none";
+            return;
+        };
+
         this.saveBoard();
     }
 
@@ -407,7 +438,6 @@ class Board {
         localStorage.setItem('upgradeLevel', JSON.stringify(this.upgradeLevel));
 
         localStorage.setItem('orderList', JSON.stringify(this.orderList.map(order => {
-            console.log(order)
             return {
                 id: +order.id,
                 item: {
