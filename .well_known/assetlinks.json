@@ -1,0 +1,11 @@
+[
+    {
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "io.github.mk_mergefarm.twa",
+            "sha256_cert_fingerprints": ["47:25:19:8A:CD:03:E6:5D:69:98:F9:80:A2:C2:92:B3:C4:F6:4B:D0:3C:92:02:57:8F:58:84:90:08:AC:E7:B6"]
+            
+        }
+    }
+]
