@@ -29,10 +29,14 @@ button {
 
 .tossFace {font-family: Tossface;}
 
-.gold, .fame {
+.gold, .fame, .fameLevel {
     min-width: 40px;
     display: inline-flex;
     justify-content: flex-end;
+}
+
+.fameLevel {
+    min-width: 20px;
 }
 
 .row {

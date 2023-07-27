@@ -126,6 +126,7 @@ class Board {
         this.buttons.upgrade3.querySelector('.price').innerHTML = (((this.upgradeLevel.maxOrder) * 300) + 300).toLocaleString();
         this.buttons.upgrade4.querySelector('.price').innerHTML = (this.orderLastTime * 300 + 200).toLocaleString();
         document.querySelector('.fame').innerHTML = this.fame.toLocaleString();
+        document.querySelector('.fameLevel').innerHTML = (this.fameLevel + 1).toLocaleString();
         // document.querySelector('.max_order').innerHTML = `${this.maxOrder}개`;
         // document.querySelector('.up_level').innerHTML = this.upgradeLevel;
         // document.querySelector('.order_duration').innerHTML = `${this.orderDuration / 1000}초`;
