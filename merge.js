@@ -373,6 +373,14 @@ class Block {
     }
 
     setLevel(level){
+        if(level === null) {
+            this.data.level = null;
+            this.data.price = 0;
+            this.data.fame = 0;
+            this.render();
+            return;
+        }
+
         this.data.level = level;
         this.data.price = 2**(level - 1) * 20;
         this.data.fame = this.data.price / 5;
@@ -397,7 +405,7 @@ class Block {
 class OrderList {
     constructor(data, board) {
         this.id = data?.id || new Date().getTime();
-        this.el = document.querySelector(`.order_list ul`);
+        this.container = document.querySelector(`.order_list ul`);
         this.item = null;
         this.needCnt = data?.needCnt || 1;
         this.time = data?.time || 60000;
@@ -459,21 +467,8 @@ class OrderList {
 
         button.addEventListener('click', e => {
             if(this.board.blocks.filter(block => +block.data.level === +(this.data.needItem + 1)).length < this.data.needCnt) return;
-
-            this.board.gold += (+this.data.gold * +this.data.needCnt);
-            this.board.fame += Math.floor((+this.data.gold * +this.data.needCnt)/5);
-            if(this.board.fame > 10000){ board.fame = 10000; }
-
-            let cnt = 0;
-
-            for(let i = 0; i < board.blocks.length; i++) {
-                if(+board.blocks[i].data.level === +(this.data.needItem + 1)) {
-                    board.blocks[i].data.level = null;
-                    cnt++;
-
-                    if(cnt === this.data.needCnt) break;
-                }
-            }
+            
+            this.sellItem();
 
             this.item.remove();
             this.board.orderList = this.board.orderList.filter(order => order.id !== this.id);
@@ -488,11 +483,21 @@ class OrderList {
         });
 
         this.item = li;
-        this.el.appendChild(li);
+        this.container.appendChild(li);
     }
 
     sellItem() {
-        
+        let cnt = 0;
+        for(let i = 0; i < board.blocks.length; i++) {
+            if(+board.blocks[i].data.level === +(this.data.needItem + 1)) {
+                this.board.gold += board.blocks[i].data.price;
+                this.board.fame += board.blocks[i].data.fame;
+                board.blocks[i].setLevel(null);
+                cnt++;
+
+                if(cnt === this.data.needCnt) break;
+            }
+        }
     }
 
     render() {
@@ -509,8 +514,8 @@ class OrderList {
         min.innerHTML = Math.floor(this.time / 60000) > 9 ? Math.floor(this.time / 60000) : `0${Math.floor(this.time / 60000)}`;
         sec.innerHTML = Math.floor((this.time % 60000) / 1000) > 9 ? Math.floor((this.time % 60000) / 1000) : `0${Math.floor((this.time % 60000) / 1000)}`;
 
-        if(this.board.orderList.length === 0) this.el.classList.add('no-order');
-        else this.el.classList.remove('no-order');
+        if(this.board.orderList.length === 0) this.container.classList.add('no-order');
+        else this.container.classList.remove('no-order');
     }
 
     removeOrder() {
