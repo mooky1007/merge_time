@@ -4,14 +4,17 @@ class Board {
         this.el = document.querySelector(el);
         this.blocks = new Array(49).fill(null);
         this.gold = 50;
-        this.upgradeLevel = 0;
         this.orderList = [];
-        this.maxOrder = 2;
         this.fame = 0;
         this.fameLevel = 0;
-        this.orderDuration = 12000;
+        this.orderDuration = 1200;
         this.orderLastTime = 0;
-        this.emogeArr = ["🍎","🍊","🍋","🍉","🍇","🍓","🍒","🍑","🍍","🍌","🍐","🍈","🍏","🍅"]        
+        this.emogeArr = ["🍎","🍊","🍋","🍉","🍇","🍓","🍒","🍑","🍍","🍌","🍐","🍈","🍏","🍅"]
+
+        this.upgradeLevel = {
+            newItem: 0,
+            maxOrder: 2,
+        }
 
         this.buttons = {
             buyItem: document.querySelector('#buyItem'),
@@ -49,13 +52,13 @@ class Board {
         })
 
         this.buttons.upgrade1.addEventListener('click', e => {
-            if(this.gold <= this.upgradeLevel * 400 + 400) return;
-            if(this.upgradeLevel >= 4) {
+            if(this.gold <= this.upgradeLevel.newItem * 400 + 400) return;
+            if(this.upgradeLevel.newItem >= 4) {
                 this.buttons.upgrade1.style.display = "none";
                 return;
             };
-            this.gold -= this.upgradeLevel * 400 + 400;
-            this.upgradeLevel++;
+            this.gold -= this.upgradeLevel.newItem * 400 + 400;
+            this.upgradeLevel.newItem ++;
             this.render();
         })
 
@@ -72,13 +75,13 @@ class Board {
         });
 
         this.buttons.upgrade3.addEventListener('click', e => {
-            if(this.gold <= ((this.maxOrder - 2) * 300) + 300) return;
-            if(this.maxOrder >= 5){
+            if(this.gold <= ((this.upgradeLevel.maxOrder - 2) * 300) + 300) return;
+            if(this.upgradeLevel.maxOrder >= 5){
                 this.buttons.upgrade3.style.display = "none";
                 return;
             };
-            this.gold -= ((this.maxOrder - 2) * 300) + 300;
-            this.maxOrder++;
+            this.gold -= ((this.upgradeLevel.maxOrder - 2) * 300) + 300;
+            this.upgradeLevel.maxOrder++;
             this.render();
         });
 
@@ -97,9 +100,9 @@ class Board {
     render() {
         this.blocks.forEach(block => block.render());
         document.querySelector('.gold').innerHTML = `${this.gold.toLocaleString()}`;
-        this.buttons.upgrade1.querySelector('.price').innerHTML = (this.upgradeLevel * 400 + 400).toLocaleString();
+        this.buttons.upgrade1.querySelector('.price').innerHTML = (this.upgradeLevel.newItem * 400 + 400).toLocaleString();
         this.buttons.upgrade2.querySelector('.price').innerHTML = (((12000 - this.orderDuration)/1000 + 1) * 500).toLocaleString();
-        this.buttons.upgrade3.querySelector('.price').innerHTML = (((this.maxOrder - 2) * 300) + 300).toLocaleString();
+        this.buttons.upgrade3.querySelector('.price').innerHTML = (((this.upgradeLevel.maxOrder - 2) * 300) + 300).toLocaleString();
         this.buttons.upgrade4.querySelector('.price').innerHTML = (this.orderLastTime * 300 + 200).toLocaleString();
         document.querySelector('.fame').innerHTML = this.fame.toLocaleString();
         // document.querySelector('.max_order').innerHTML = `${this.maxOrder}개`;
@@ -305,7 +308,7 @@ class Board {
             randomBlock = emptyBlocks[Math.floor(Math.random() * emptyBlocks1.length)];
         }
 
-        randomBlock.setLevel(Math.floor(Math.random() * (this.upgradeLevel + 1) + 1));
+        randomBlock.setLevel(Math.floor(Math.random() * (this.upgradeLevel.newItem + 1) + 1));
         randomBlock.el.classList.add('scaleUp');
         randomBlock.render();
         setTimeout(() => {
@@ -329,15 +332,13 @@ class Board {
     }
 
     orderTimer() {
-        if(this.orderList.length >= this.maxOrder) return;
-
         this.createOrderItem();
         this.createOrderTimer();
     }
 
     createOrderTimer() {
         this.orderTimerObj = setInterval(() => {
-            if(this.orderList.length > this.maxOrder) return;
+            if(this.orderList.length >= this.upgradeLevel.maxOrder) return;
             this.createOrderItem();
             this.orderList.forEach(order => order.render());
         }, this.orderDuration);
