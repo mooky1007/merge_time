@@ -61,6 +61,7 @@ body {
 }
 
 .block {
+    position: relative;
     font-family: Tossface;
     font-size: 32px;
     width: calc(100% / 7);
@@ -273,6 +274,14 @@ body {
     align-items: center;
     text-align: left;
     font-size: 10px;
+}
+
+.dev {
+    font-size: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 @media screen and (max-width: 720px) {

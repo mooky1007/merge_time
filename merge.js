@@ -10,7 +10,7 @@ class Board {
         this.fame = 0;
         this.orderDuration = 12000;
         this.orderLastTime = 0;
-        this.emogeArr = ["🍎","🍊","🍋","🍉","🍇","🍓","🍒","🍑","🍍","🍌","🍐","🍈","🍏","🍅"]
+        this.emogeArr = ["🍎","🍊","🍋","🍉","🍇","🍓","🍒","🍑","🍍","🍌","🍐","🍈","🍏","🍅"]        
 
         this.buttons = {
             buyItem: document.querySelector('#buyItem'),
@@ -22,6 +22,8 @@ class Board {
 
         this.init();
         this.orderTimer();
+
+        // this.devModeTest();
         this.render();
     }
 
@@ -196,8 +198,8 @@ class Board {
 
     changeItem(from, to) {
         const temp = to.data.level;
-        to.data.level = from.data.level;
-        from.data.level = temp;
+        to.setLevel(from.data.level);
+        from.setLevel(temp);
 
         to.el.classList.remove('drag-on');
         this.render();
@@ -310,12 +312,20 @@ class Board {
         }, 500);
     }
 
+    getFameLevel() {
+        if (this.fame <= 0) return 0;
+        const fameLevel = Math.floor(Math.log2(this.fame / 200)) + 1;
+        return fameLevel;
+    }
+
     createOrderItem() {
-        const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/300) + 2))) + 1;
+        const randomItem = Math.floor(Math.random() * (this.getFameLevel() + 2)) + 1;
+
+        console.log(randomItem)
 
         this.orderList.push(new OrderList({
             qty: Math.floor(Math.random() * (5 - 1) + 1),
-            item: new Block(null, this).setLevel(randomItem)
+            item: new Block(null, this).setLevel(+randomItem)
         }, this));
     }
 
@@ -342,6 +352,12 @@ class Board {
         this.deleteOrderTimer();
         this.createOrderTimer();
     }
+
+    // devModeTest() {
+    //     for(let i = 0; i < this.emogeArr.length; i++) {
+    //         this.blocks[i].setLevel(i + 1);
+    //     }
+    // }
 }
 
 class Block {
@@ -367,6 +383,7 @@ class Block {
         div.id = this.id;
         div.style.color = "#fff";
         div.draggable = true;
+
         this.el = div;
     }
 
@@ -379,13 +396,19 @@ class Block {
         }
 
         this.data.level = level;
-        this.data.price = 2**(level - 1) * 20;
+        this.data.price = Math.trunc(2**(level - 1) * 20 * (1+this.board.getFameLevel() / 10));
         this.data.fame = this.data.price / 5;
         return this.data;
     }
 
     render() {
-        this.el.innerHTML = this.board.emogeArr[this.data.level - 1] || "";
+        if(this.data.level === null){
+            this.el.innerHTML = "";
+            return;
+        }
+        
+        // this.el.innerHTML = `<span class='dev'>${this.data.level}<br>${this.data.price}<br>${this.data.fame}</span>`;
+        this.el.innerHTML = this.board.emogeArr[this.data.level - 1];
     }
 
     createClone() {
@@ -410,10 +433,8 @@ class OrderList {
         this.level = data.item.level || null;
         this.time = data.item.level * 15000 + this.board.orderLastTime * 5000;
         this.qty = data?.qty || 1;
-        this.price = (+data.item.price * +this.qty).toLocaleString();
+        this.price = (+data.item.price * +this.qty);
 
-        console.log(data)
-        console.log(this)
         this.init();
     }
 
@@ -457,7 +478,7 @@ class OrderList {
         sec.classList.add('sec');
 
         needItem.innerHTML = `${this.board.emogeArr[this.level - 1]} <span class="cnt_num">x ${this.qty}</span>`
-        buyPrice.innerHTML = `${this.price}<span style="font-size:10px;">원</span>`;
+        buyPrice.innerHTML = `${this.price.toLocaleString()}<span style="font-size:10px;">원</span>`;
         button.innerHTML = '판매';
         button.classList.add('sell');
         button2.innerHTML = '삭제';
@@ -522,7 +543,7 @@ class OrderList {
         this.item.remove();
         this.board.orderList = this.board.orderList.filter(order => order.id !== this.id);
         this.render();
-        this.board.fame -= Math.floor((+this.data.gold * +this.qty)/5);
+        this.board.fame -= Math.floor((+this.price / 5));
         this.board.render();
     }
 }
