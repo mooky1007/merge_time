@@ -311,13 +311,11 @@ class Board {
     }
 
     createOrderItem() {
-        const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/300) + 2)));
+        const randomItem = Math.floor(Math.random() * ((Math.floor(this.fame/300) + 2))) + 1;
 
         this.orderList.push(new OrderList({
-            time: (randomItem + 1) * 15000 + this.orderLastTime * 5000,
-            gold: 2**(randomItem) * 20,
-            needItem: randomItem,
-            needCnt: Math.floor(Math.random() * (5 - 1) + 1)
+            qty: Math.floor(Math.random() * (5 - 1) + 1),
+            item: new Block(null, this).setLevel(randomItem)
         }, this));
     }
 
@@ -358,9 +356,9 @@ class Block {
             price: 0,
             fame: 0,
         }
-        this.create();
 
-        this.el.addEventListener('touchstart', e => console.log(this.data));
+        if(id === null) return;
+        this.create();
     }
 
     create() {
@@ -378,12 +376,12 @@ class Block {
             this.data.price = 0;
             this.data.fame = 0;
             this.render();
-            return;
         }
 
         this.data.level = level;
         this.data.price = 2**(level - 1) * 20;
         this.data.fame = this.data.price / 5;
+        return this.data;
     }
 
     render() {
@@ -404,16 +402,18 @@ class Block {
 
 class OrderList {
     constructor(data, board) {
+        this.board = board;
         this.id = data?.id || new Date().getTime();
         this.container = document.querySelector(`.order_list ul`);
         this.item = null;
-        this.needCnt = data?.needCnt || 1;
-        this.time = data?.time || 60000;
-        this.board = board;
 
-        this.price = (+data.gold * +this.needCnt).toLocaleString();
+        this.level = data.item.level || null;
+        this.time = data.item.level * 15000 + this.board.orderLastTime * 5000;
+        this.qty = data?.qty || 1;
+        this.price = (+data.item.price * +this.qty).toLocaleString();
 
-        this.data = data;
+        console.log(data)
+        console.log(this)
         this.init();
     }
 
@@ -456,17 +456,17 @@ class OrderList {
         min.classList.add('min');
         sec.classList.add('sec');
 
-        needItem.innerHTML = `${this.board.emogeArr[this.data.needItem]} <span class="cnt_num">x ${this.needCnt}</span>`
+        needItem.innerHTML = `${this.board.emogeArr[this.level - 1]} <span class="cnt_num">x ${this.qty}</span>`
         buyPrice.innerHTML = `${this.price}<span style="font-size:10px;">원</span>`;
         button.innerHTML = '판매';
         button.classList.add('sell');
         button2.innerHTML = '삭제';
         button2.style.marginLeft = "0";
-        min.innerHTML = this.data.time / 60000 > 9 ? Math.floor(this.data.time / 60000) : `0${Math.floor(this.data.time / 60000)}`;
-        sec.innerHTML = this.data.time % 60000 > 9 ? Math.floor((this.data.time % 60000) / 1000) : `0${Math.floor((this.data.time % 60000) / 1000)}`;
+        min.innerHTML = this.time / 60000 > 9 ? Math.floor(this.time / 60000) : `0${Math.floor(this.time / 60000)}`;
+        sec.innerHTML = this.time % 60000 > 9 ? Math.floor((this.time % 60000) / 1000) : `0${Math.floor((this.time % 60000) / 1000)}`;
 
         button.addEventListener('click', e => {
-            if(this.board.blocks.filter(block => +block.data.level === +(this.data.needItem + 1)).length < this.data.needCnt) return;
+            if(this.board.blocks.filter(block => +block.data.level === +this.level).length < this.qty) return;
             
             this.sellItem();
 
@@ -489,13 +489,13 @@ class OrderList {
     sellItem() {
         let cnt = 0;
         for(let i = 0; i < board.blocks.length; i++) {
-            if(+board.blocks[i].data.level === +(this.data.needItem + 1)) {
+            if(+board.blocks[i].data.level === +this.level) {
                 this.board.gold += board.blocks[i].data.price;
                 this.board.fame += board.blocks[i].data.fame;
                 board.blocks[i].setLevel(null);
                 cnt++;
 
-                if(cnt === this.data.needCnt) break;
+                if(cnt === this.qty) break;
             }
         }
     }
@@ -522,7 +522,7 @@ class OrderList {
         this.item.remove();
         this.board.orderList = this.board.orderList.filter(order => order.id !== this.id);
         this.render();
-        this.board.fame -= Math.floor((+this.data.gold * +this.data.needCnt)/5);
+        this.board.fame -= Math.floor((+this.data.gold * +this.qty)/5);
         this.board.render();
     }
 }
