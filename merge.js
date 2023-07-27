@@ -330,7 +330,7 @@ class Board {
             randomBlock = emptyBlocks3[Math.floor(Math.random() * emptyBlocks3.length)];
         }else if(emptyBlocks2.length > 7){
             randomBlock = [...emptyBlocks3, ...emptyBlocks2][Math.floor((Math.random() * emptyBlocks2.length))];
-        }else if(emptyBlocks1.length !== 0){
+        }else if(emptyBlocks.length !== 0){
             randomBlock = emptyBlocks[Math.floor(Math.random() * emptyBlocks1.length)];
         }
 
