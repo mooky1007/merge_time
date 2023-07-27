@@ -620,6 +620,7 @@ class OrderList {
     }
 
     render() {
+        this.board.saveBoard();
         const timeEl =  this.item.querySelector('.time');
         const min = this.item.querySelector('.min');
         const sec = this.item.querySelector('.sec');
