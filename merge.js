@@ -471,8 +471,8 @@ class OrderList {
         this.timer = setInterval(() => {
             this.time -= 1000;
             if(this.time <= 0) {
-                this.removeOrder();
                 clearInterval(this.timer);
+                this.removeOrder();
                 return;
             }
             this.render();
@@ -518,6 +518,7 @@ class OrderList {
             
             this.sellItem();
 
+            clearInterval(this.timer);
             this.item.remove();
             this.board.orderList = this.board.orderList.filter(order => order.id !== this.id);
             this.board.render();
