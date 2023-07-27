@@ -393,7 +393,7 @@ class Board {
         let randomItem = Math.floor(Math.random() * (this.fameLevel + 2)) + 1;
 
         this.orderList.push(new OrderList({
-            qty: Math.floor(Math.random() * ((3 + this.fameLevel) - 1) + 1),
+            qty: Math.floor(Math.random() * (3 + (this.fameLevel + 1) - randomItem)) + 1,
             item: new Block(null, this).setLevel(+randomItem)
         }, this));
     }
