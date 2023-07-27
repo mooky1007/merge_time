@@ -23,6 +23,10 @@ body {
     gap: 30px;
 }
 
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
 .tossFace {font-family: Tossface;}
 
 .gold, .fame {

@@ -457,7 +457,7 @@ class OrderList {
         this.item = null;
 
         this.level = data.item.level || null;
-        this.time = data.item.level * 15000 + this.board.orderLastTime * 5000;
+        this.time = data.item.level * 15000 + (this.board.orderLastTime * 5000);
         this.qty = data?.qty || 1;
         this.price = (+data.item.price * +this.qty);
 
