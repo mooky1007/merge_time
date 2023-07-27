@@ -1,20 +1,29 @@
 class Board {
     constructor(el) {
+        this.defaultConfig = {
+            orderDuration : 10000,
+            gold : 50,
+            fame : 0,
+            fameLevel : 0,
+            orderLastTime : 0,
+            maxOrder : 2
+        }
+
         this.container = document.querySelector('.squre');
         this.el = document.querySelector(el);
         this.blocks = new Array(49).fill(null);
         this.modal = document.querySelector('.modal_layer');
-        this.gold = 50;
+        this.gold = this.defaultConfig.gold;
         this.orderList = [];
-        this.fame = 0;
-        this.fameLevel = 0;
-        this.orderDuration = 10000;
-        this.orderLastTime = 0;
+        this.fame = this.defaultConfig.fame;
+        this.fameLevel = this.defaultConfig.fameLevel;
+        this.orderDuration = this.defaultConfig.orderDuration;
+        this.orderLastTime = this.defaultConfig.orderLastTime;
         this.emogeArr = ["🍎","🍊","🍋","🍉","🍇","🍓","🍒","🍑","🍍","🍌","🍐","🍈","🍏","🍅"]
 
         this.upgradeLevel = {
             newItem: 0,
-            maxOrder: 2,
+            maxOrder: 0,
             orderSpeed: 0,
             orderLastTime: 0
         }
@@ -75,24 +84,24 @@ class Board {
         })
 
         this.buttons.upgrade2.addEventListener('click', e => {
-            if(this.gold <= ((12000 - this.orderDuration)/1000 + 1) * 500) return;
-            if(this.orderDuration <= 4000){
+            if(this.gold <= ((this.defaultConfig.orderDuration - this.orderDuration)/1000 + 1) * 500) return;
+            if(this.orderDuration <= 3000){
                 this.buttons.upgrade2.style.display = "none";
                 return;
             };
-            this.gold -= ((12000 - this.orderDuration)/1000 + 1) * 500;
+            this.gold -= ((this.defaultConfig.orderDuration - this.orderDuration)/1000 + 1) * 500;
             this.orderDuration -= 1000;
             this.updateOrderTimer();
             this.render();
         });
 
         this.buttons.upgrade3.addEventListener('click', e => {
-            if(this.gold <= ((this.upgradeLevel.maxOrder - 2) * 300) + 300) return;
+            if(this.gold <= ((this.upgradeLevel.maxOrder) * 300) + 300) return;
             if(this.upgradeLevel.maxOrder >= 5){
                 this.buttons.upgrade3.style.display = "none";
                 return;
             };
-            this.gold -= ((this.upgradeLevel.maxOrder - 2) * 300) + 300;
+            this.gold -= ((this.upgradeLevel.maxOrder) * 300) + 300;
             this.upgradeLevel.maxOrder++;
             this.render();
         });
@@ -113,8 +122,8 @@ class Board {
         this.blocks.forEach(block => block.render());
         document.querySelector('.gold').innerHTML = `${this.gold.toLocaleString()}`;
         this.buttons.upgrade1.querySelector('.price').innerHTML = (this.upgradeLevel.newItem * 400 + 400).toLocaleString();
-        this.buttons.upgrade2.querySelector('.price').innerHTML = (((12000 - this.orderDuration)/1000 + 1) * 500).toLocaleString();
-        this.buttons.upgrade3.querySelector('.price').innerHTML = (((this.upgradeLevel.maxOrder - 2) * 300) + 300).toLocaleString();
+        this.buttons.upgrade2.querySelector('.price').innerHTML = (((this.defaultConfig.orderDuration - this.orderDuration)/1000 + 1) * 500).toLocaleString();
+        this.buttons.upgrade3.querySelector('.price').innerHTML = (((this.upgradeLevel.maxOrder) * 300) + 300).toLocaleString();
         this.buttons.upgrade4.querySelector('.price').innerHTML = (this.orderLastTime * 300 + 200).toLocaleString();
         document.querySelector('.fame').innerHTML = this.fame.toLocaleString();
         // document.querySelector('.max_order').innerHTML = `${this.maxOrder}개`;
@@ -355,7 +364,7 @@ class Board {
 
     createOrderTimer() {
         this.orderTimerObj = setInterval(() => {
-            if(this.orderList.length >= this.upgradeLevel.maxOrder) return;
+            if(this.orderList.length >= (2 + this.upgradeLevel.maxOrder)) return;
             this.createOrderItem();
             this.orderList.forEach(order => order.render());
         }, this.orderDuration);
