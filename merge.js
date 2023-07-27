@@ -523,7 +523,7 @@ class Block {
         }
 
         this.data.level = level;
-        this.data.price = Math.trunc(2**(level - 1) * 20 * (1 + +this.board.fameLevel / 10));
+        this.data.price = Math.trunc(2**(level - 1) * 20 * (1 + +this.board.fameLevel / 50));
         this.data.fame = Math.trunc(this.data.price / 5);
         return this.data;
     }
