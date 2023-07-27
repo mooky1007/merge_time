@@ -1,17 +1,8 @@
-[
-    {
-        "relation": ["delegate_permission/common.handle_all_urls"],
-        "target": {
-            "namespace": "android_app",
-            "package_name": "io.github.mk_mergefarm.twa",
-            "sha256_cert_fingerprints": ["33:39:CE:2B:BE:9E:E8:26:E2:AD:BD:A9:72:AB:84:57:63:12:97:DA:45:05:26:EC:96:E4:94:14:8E:35:B2:1B"]
-        }
-    },{
-        "relation": ["delegate_permission/common.handle_all_urls"],
-        "target": {
-            "namespace": "android_app",
-            "package_name": "io.github.mk_mergefarm.twa",
-            "sha256_cert_fingerprints": ["47:25:19:8A:CD:03:E6:5D:69:98:F9:80:A2:C2:92:B3:C4:F6:4B:D0:3C:92:02:57:8F:58:84:90:08:AC:E7:B6"]
-        }
-    }
-]
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.mooky1007.twa",
+        "sha256_cert_fingerprints": ["6A:35:C5:BE:C9:FE:AC:3D:56:D0:2E:50:78:8D:9E:29:1E:91:C8:F7:7B:F9:3C:FD:F3:47:23:9B:5B:66:91:65"]
+      }
+    }]
