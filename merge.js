@@ -672,7 +672,7 @@ class OrderList {
         this.item.remove();
         this.board.orderList = this.board.orderList.filter(order => order.id !== this.id);
         this.render();
-        this.board.fame -= Math.floor((+this.price / 5));
+        this.board.fame -= Math.floor((+this.price / 20));
         if(this.board.fame < 0) this.board.fame = 0;
         this.board.render();
     }
