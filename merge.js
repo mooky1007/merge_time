@@ -294,12 +294,12 @@ class Board {
         const emptyBlocks3 = emptyBlocks.filter(block => block.id >= 35 && block.id < 49);
 
         let randomBlock
-        if(emptyBlocks3.length !== 0){
+        if(emptyBlocks3.length > 7){
             randomBlock = emptyBlocks3[Math.floor(Math.random() * emptyBlocks3.length)];
-        }else if(emptyBlocks2.length !== 0){
-            randomBlock = emptyBlocks2[Math.floor((Math.random() * emptyBlocks2.length))];
+        }else if(emptyBlocks2.length > 7){
+            randomBlock = [...emptyBlocks3, ...emptyBlocks2][Math.floor((Math.random() * emptyBlocks2.length))];
         }else if(emptyBlocks1.length !== 0){
-            randomBlock = emptyBlocks1[Math.floor(Math.random() * emptyBlocks1.length)];
+            randomBlock = emptyBlocks[Math.floor(Math.random() * emptyBlocks1.length)];
         }
 
         randomBlock.data.level = Math.floor(Math.random() * (this.upgradeLevel + 1) + 1);
