@@ -3,6 +3,7 @@ class Board {
         this.container = document.querySelector('.squre');
         this.el = document.querySelector(el);
         this.blocks = new Array(49).fill(null);
+        this.modal = document.querySelector('.modal_layer');
         this.gold = 50;
         this.orderList = [];
         this.fame = 0;
@@ -20,6 +21,7 @@ class Board {
 
         this.buttons = {
             buyItem: document.querySelector('#buyItem'),
+            upgradeModal: document.querySelector('#upgradeModal'),
             upgrade1: document.querySelector('#upgrade1'),
             upgrade2: document.querySelector('#upgrade2'),
             upgrade3: document.querySelector('#upgrade3'),
@@ -51,6 +53,14 @@ class Board {
             this.gold -= 10;
             this.createRandomBlock();
             this.render();
+        })
+
+        this.buttons.upgradeModal.addEventListener('click', e => {
+            this.modal.classList.toggle('hide');
+        })
+
+        this.modal.querySelector('.close').addEventListener('click', e => {
+            this.modal.classList.toggle('hide');
         })
 
         this.buttons.upgrade1.addEventListener('click', e => {

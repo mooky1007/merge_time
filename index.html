@@ -24,8 +24,9 @@
             <div class="board"></div>
             <div class="tiles"></div>
         </div>
-        <div class="button_wrap">
-            <button type="button" id="buyItem"><span class="tossFace" style="margin-right:5px;">🌱</span>과일 만들기</button>
+        <div class="button_wrap main">
+            <button type="button" id="buyItem"><span class="tossFace" style="margin-right:5px;">🌱</span>과일 만들기<span class="blank"></span></button>
+            <button type="button" id="upgradeModal"><span class="tossFace" style="margin-right:5px;">⚡</span>업그레이드<span class="blank"></span></button>
         </div>
     </div>
     <div class="order_list">
@@ -34,12 +35,21 @@
             <li class="infor_text">🙏🏻 주문이 없습니다. 조금만 기다려주세요...</li>
         </ul>
     </div>
-    <div class="button_wrap">
-        <h2>업그레이드</h2>
-        <button type="button" id="upgrade1"><span class="tossFace" style="margin-right:5px;">🔥</span>아이템 생성 레벨업<span class="price">0</span><span style="font-size:10px;">원</span></button>
-        <button type="button" id="upgrade2"><span class="tossFace" style="margin-right:5px;">🕖</span>주문서 생성 속도 감소<span class="price">0</span><span style="font-size:10px;">원</span></button>
-        <button type="button" id="upgrade3"><span class="tossFace" style="margin-right:5px;">📑</span>최대 주문서 보유량 증가<span class="price">0</span><span style="font-size:10px;">원</span></button>
-        <button type="button" id="upgrade4"><span class="tossFace" style="margin-right:5px;">🪑</span>주문서 대기시간 증가<span class="price">0</span><span style="font-size:10px;">원</span></button>
+    <div class="modal_layer hide">
+        <div class="modal_container">
+            <h3 class="modal_title">업그레이드</h3>
+            <div class="modal_content">
+                <div class="button_wrap">
+                    <button type="button" id="upgrade1"><span class="tossFace" style="margin-right:5px;">🔥</span>아이템 생성 레벨업<span class="price">0</span><span style="font-size:10px;">원</span></button>
+                    <button type="button" id="upgrade2"><span class="tossFace" style="margin-right:5px;">🕖</span>주문서 생성 속도 감소<span class="price">0</span><span style="font-size:10px;">원</span></button>
+                    <button type="button" id="upgrade3"><span class="tossFace" style="margin-right:5px;">📑</span>최대 주문서 보유량 증가<span class="price">0</span><span style="font-size:10px;">원</span></button>
+                    <button type="button" id="upgrade4"><span class="tossFace" style="margin-right:5px;">🪑</span>주문서 대기시간 증가<span class="price">0</span><span style="font-size:10px;">원</span></button>
+                </div>
+            </div>
+            <div class="modal_button_wrap">
+                <button type="button" class="close">닫기</button>
+            </div>
+        </div>
     </div>
     <script>
         const board = new Board('.board');

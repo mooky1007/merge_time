@@ -196,9 +196,11 @@ body {
 
 .order_list ul {
     min-width: 200px;
-    padding: 20px 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
+    max-height: 240px;
+    overflow: auto;
 }
 
 .order_list ul li {
@@ -284,6 +286,90 @@ body {
     transform: translate(-50%, -50%);
 }
 
+.modal_layer {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modal_container {
+    position: absolute;
+    width: 90%;
+    min-height: 30vh;
+    height: auto;
+    background: #202020;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 5%;
+}
+
+.modal_title {
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.modal_content {
+    color: #fff;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.modal_button_wrap {
+    margin-top: auto;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal_button_wrap button {
+    padding: 5px 15px;
+    border: none;
+    background: #111;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.hide {
+    display: none;
+}
+
+.button_wrap.main {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+#upgradeModal {
+    height: 42px;
+    font-size: 13px;
+    background: #222;
+    color: #fff;
+    margin-bottom: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.blank {
+    width: 10px;
+}
+
 @media screen and (max-width: 720px) {
     .drag-on {
         background: inherit !important;
@@ -292,6 +378,7 @@ body {
     html {
         width: 100%;
         height: 100vh;
+        overflow: hidden;
     }
 
     body {
@@ -302,6 +389,7 @@ body {
         height: 100vh;
         padding: 20px 5%;
         gap: 10px;
+        overflow: hidden;
     }
 
     .row {
@@ -367,12 +455,12 @@ body {
         width: 100%;
         font-size: 13px;
         padding-left: 10px;
+        margin-bottom: 10px;
     }
 
     .order_list ul {
         width: 100%;
         overflow: auto;
-        padding: 10px 0;
     }
 
     .order_list ul li {
