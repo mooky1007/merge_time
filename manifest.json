@@ -4,32 +4,32 @@
     "description": "Make Fruit and Sell it for Cash!",
     "icons": [
       {
-        "src": "/simon_game/assets/mergefarm72.png",
+        "src": "/mergefarm/assets/mergefarm72.png",
         "type": "image/png",
         "sizes": "72x72"
       },
       {
-        "src": "/simon_game/assets/mergefarm96.png",
+        "src": "/mergefarm/assets/mergefarm96.png",
         "type": "image/png",
         "sizes": "96x96"
       },
       {
-        "src": "/simon_game/assets/mergefarm128.png",
+        "src": "/mergefarm/assets/mergefarm128.png",
         "type": "image/png",
         "sizes": "128x128"
       },
       {
-        "src": "/simon_game/assets/mergefarm144.png",
+        "src": "/mergefarm/assets/mergefarm144.png",
         "type": "image/png",
         "sizes": "144x144"
       },
       {
-        "src": "/simon_game/assets/mergefarm152.png",
+        "src": "/mergefarm/assets/mergefarm152.png",
         "type": "image/png",
         "sizes": "152x152"
       },
       {
-        "src": "/simon_game/assets/mergefarm512.png",
+        "src": "/mergefarm/assets/mergefarm512.png",
         "type": "image/png",
         "sizes": "512x512"
       }
