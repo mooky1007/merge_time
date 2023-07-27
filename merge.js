@@ -8,6 +8,7 @@ class Board {
         this.orderList = [];
         this.maxOrder = 2;
         this.fame = 0;
+        this.fameLevel = 0;
         this.orderDuration = 12000;
         this.orderLastTime = 0;
         this.emogeArr = ["🍎","🍊","🍋","🍉","🍇","🍓","🍒","🍑","🍍","🍌","🍐","🍈","🍏","🍅"]        
@@ -313,15 +314,13 @@ class Board {
     }
 
     getFameLevel() {
-        if (this.fame <= 0) return 0;
         const fameLevel = Math.floor(Math.log2(this.fame / 200)) + 1;
-        return fameLevel;
+        this.fameLevel = fameLevel < 0 ? 0 : fameLevel;
     }
 
     createOrderItem() {
-        const randomItem = Math.floor(Math.random() * (this.getFameLevel() + 2)) + 1;
-
-        console.log(randomItem)
+        this.getFameLevel();
+        let randomItem = Math.floor(Math.random() * (this.fameLevel + 2)) + 1;
 
         this.orderList.push(new OrderList({
             qty: Math.floor(Math.random() * (5 - 1) + 1),
@@ -396,7 +395,7 @@ class Block {
         }
 
         this.data.level = level;
-        this.data.price = Math.trunc(2**(level - 1) * 20 * (1+this.board.getFameLevel() / 10));
+        this.data.price = Math.trunc(2**(level - 1) * 20 * (1 + +this.board.fameLevel / 10));
         this.data.fame = this.data.price / 5;
         return this.data;
     }
