@@ -7,13 +7,15 @@ class Board {
         this.orderList = [];
         this.fame = 0;
         this.fameLevel = 0;
-        this.orderDuration = 1200;
+        this.orderDuration = 10000;
         this.orderLastTime = 0;
         this.emogeArr = ["🍎","🍊","🍋","🍉","🍇","🍓","🍒","🍑","🍍","🍌","🍐","🍈","🍏","🍅"]
 
         this.upgradeLevel = {
             newItem: 0,
             maxOrder: 2,
+            orderSpeed: 0,
+            orderLastTime: 0
         }
 
         this.buttons = {
@@ -64,7 +66,7 @@ class Board {
 
         this.buttons.upgrade2.addEventListener('click', e => {
             if(this.gold <= ((12000 - this.orderDuration)/1000 + 1) * 500) return;
-            if(this.orderDuration <= 5000){
+            if(this.orderDuration <= 4000){
                 this.buttons.upgrade2.style.display = "none";
                 return;
             };
@@ -317,6 +319,11 @@ class Board {
     }
 
     getFameLevel() {
+        if(this.fame < 0){
+            this.fameLevel = 0;
+            return;
+        }
+
         const fameLevel = Math.floor(Math.log2(this.fame / 200)) + 1;
         this.fameLevel = fameLevel < 0 ? 0 : fameLevel;
     }
