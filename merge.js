@@ -116,6 +116,9 @@ class Board {
             this.orderLastTime++;
             this.render();
         });
+
+        this.loadBoard();
+        this.render();
     }
 
     render() {
@@ -130,6 +133,7 @@ class Board {
         // document.querySelector('.max_order').innerHTML = `${this.maxOrder}개`;
         // document.querySelector('.up_level').innerHTML = this.upgradeLevel;
         // document.querySelector('.order_duration').innerHTML = `${this.orderDuration / 1000}초`;
+        this.saveBoard();
     }
 
     setMouseEvent() {
@@ -346,6 +350,11 @@ class Board {
 
         const fameLevel = Math.floor(Math.log2(this.fame / 200)) + 1;
         this.fameLevel = fameLevel < 0 ? 0 : fameLevel;
+        this.render();
+    }
+
+    orderTimer() {
+        this.createOrderTimer();
     }
 
     createOrderItem() {
@@ -358,16 +367,13 @@ class Board {
         }, this));
     }
 
-    orderTimer() {
-        this.createOrderItem();
-        this.createOrderTimer();
-    }
 
     createOrderTimer() {
         this.orderTimerObj = setInterval(() => {
             if(this.orderList.length >= (2 + this.upgradeLevel.maxOrder)) return;
             this.createOrderItem();
             this.orderList.forEach(order => order.render());
+            this.saveBoard();
         }, this.orderDuration);
     }
 
@@ -385,6 +391,70 @@ class Board {
     //         this.blocks[i].setLevel(i + 1);
     //     }
     // }
+
+    clearOrderList() {
+        this.orderList.forEach(order => order.removeOrder());
+    }
+
+    saveBoard() {
+        localStorage.setItem('blocks', JSON.stringify(this.blocks.map(el => el.data.level)));
+        localStorage.setItem('gold', this.gold);
+        localStorage.setItem('fame', this.fame);
+        localStorage.setItem('fameLevel', this.fameLevel);
+        localStorage.setItem('orderDuration', this.orderDuration);
+        localStorage.setItem('orderLastTime', this.orderLastTime);
+        localStorage.setItem('maxOrder', this.maxOrder);
+        localStorage.setItem('upgradeLevel', JSON.stringify(this.upgradeLevel));
+
+        localStorage.setItem('orderList', JSON.stringify(this.orderList.map(order => {
+            console.log(order)
+            return {
+                id: +order.id,
+                item: {
+                    level: +order.level,
+                    price: +order.price / +order.qty
+                },
+                qty: +order.qty,
+                time: +order.time
+            }
+        })));
+    }
+
+    loadBoard() {
+        this.clearOrderList();
+
+        localStorage.getItem('blocks') && this.blocks.forEach((block, idx) => {
+            const data = JSON.parse(localStorage.getItem('blocks'))[idx];
+            block.setLevel(data);
+        });
+        localStorage.getItem('gold') && (this.gold = +localStorage.getItem('gold'));
+        localStorage.getItem('fame') && (this.fame = +localStorage.getItem('fame'));
+        localStorage.getItem('fameLevel') && (this.fameLevel = +localStorage.getItem('fameLevel'));
+        localStorage.getItem('orderDuration') && (this.orderDuration = +localStorage.getItem('orderDuration'));
+        localStorage.getItem('orderLastTime') && (this.orderLastTime = +localStorage.getItem('orderLastTime'));
+        localStorage.getItem('maxOrder') && (this.maxOrder = +localStorage.getItem('maxOrder'));
+        localStorage.getItem('upgradeLevel') && (this.upgradeLevel = JSON.parse(localStorage.getItem('upgradeLevel')));
+
+        localStorage.getItem('orderList') && JSON.parse(localStorage.getItem('orderList')).forEach(order => {
+            const orederItem = new OrderList(order, this);
+            orederItem.container.classList.remove('no-order');
+            this.orderList.push(orederItem);
+        });
+
+        this.render();
+    }
+
+    deleteLocalStorage() {
+        localStorage.removeItem('blocks');
+        localStorage.removeItem('gold');
+        localStorage.removeItem('fame');
+        localStorage.removeItem('fameLevel');
+        localStorage.removeItem('orderDuration');
+        localStorage.removeItem('orderLastTime');
+        localStorage.removeItem('maxOrder');
+        localStorage.removeItem('upgradeLevel');
+        localStorage.removeItem('orderList');
+    }
 }
 
 class Block {
@@ -471,8 +541,8 @@ class OrderList {
         this.timer = setInterval(() => {
             this.time -= 1000;
             if(this.time <= 0) {
-                clearInterval(this.timer);
                 this.removeOrder();
+                clearInterval(this.timer);
                 return;
             }
             this.render();
