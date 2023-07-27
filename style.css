@@ -23,6 +23,12 @@ body {
     gap: 30px;
 }
 
+ins {
+    position: absolute !important;
+    left: 0 !important;
+    bottom: 0;
+}
+
 button {
     -webkit-tap-highlight-color: transparent;
     cursor: pointer;
