@@ -2,8 +2,8 @@ class Board {
     constructor(el) {
         this.defaultConfig = {
             orderDuration : 10000,
-            gold : 5000,
-            fame : 200,
+            gold : 50,
+            fame : 0,
             fameLevel : 0,
             orderLastTime : 0,
             maxOrder : 2
@@ -458,7 +458,7 @@ class OrderList {
         this.item = null;
 
         this.level = data.item.level || null;
-        this.time = (data.item.level * 5000) + (this.board.orderLastTime * 5000);
+        this.time = (data.item.level * 30000) + (this.board.orderLastTime * 5000);
         this.qty = data?.qty || 1;
         this.price = (+data.item.price * +this.qty);
 
