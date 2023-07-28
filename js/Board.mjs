@@ -1,3 +1,6 @@
+import { BoardItem } from "./BoardItem.mjs";
+import { OrderList } from "./OrderList.mjs";
+
 export class Board {
     constructor(el) {
         this.defaultConfig = {
@@ -68,7 +71,7 @@ export class Board {
 
     init() {
         this.blocks.forEach((_, idx) => {
-            this.blocks[idx] = new Block(idx, this);
+            this.blocks[idx] = new BoardItem(idx, this);
             this.el.appendChild(this.blocks[idx].el);
 
             const tile = document.createElement('div');
@@ -395,7 +398,7 @@ export class Board {
 
         this.orderList.push(new OrderList({
             qty: Math.floor(Math.random() * (3 + (this.fameLevel + 1) - randomItem)) + 1,
-            item: new Block(null, this).setLevel(+randomItem)
+            item: new BoardItem(null, this).setLevel(+randomItem)
         }, this));
     }
 
