@@ -15,6 +15,14 @@ export class Upgrade {
             })
         )
     }
+
+    createUpgradeContainer() {
+        
+    }
+
+    createUpgradeElement() {
+
+    }
 }
 
 class UpgradeItem {
