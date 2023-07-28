@@ -8,7 +8,6 @@
     <meta property="og:description" content="과일을 만들어 판매하세요.">
     <meta property="og:image" content="./assets/mergefarm_512.png" />
     <meta name="description" content="과일을 만들어 판매하세요.">
-    <link rel="stylesheet" href="./src/css/style.css">
     <link rel="manifest" href="./manifest.json" crossorigin="use-credentials" />
     <link rel="shortcut icon" href="./assets/mergefarm_72.png" type="image/x-icon">
     <link rel="stylesheet" href="./style.css">
@@ -46,7 +45,7 @@
             <li class="infor_text">🙏🏻 주문이 없습니다. 조금만 기다려주세요...</li>
         </ul>
     </div>
-    <div class="modal_layer hide">
+    <div class="modal_layer hide" id="upgradeModalLayer">
         <div class="modal_container">
             <h3 class="modal_title">업그레이드</h3>
             <div class="modal_content">
@@ -62,13 +61,25 @@
             </div>
         </div>
     </div>
+    <div class="modal_layer hide" id="inforModalLayer">
+        <div class="modal_container">
+            <h3 class="modal_title">🍔</h3>
+            <div class="modal_content">
+                <p>ㅋㅋ</p>
+            </div>
+            <div class="modal_button_wrap">
+                <button type="button" class="close">확인</button>
+            </div>
+        </div>
+    </div>inforModalLayer
     <ins class="kakao_ad_area" style="display:none;"
         data-ad-unit = "DAN-OzwbkdEIU8bYd4ij"
         data-ad-width = "320"
         data-ad-height = "50"></ins>
     <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js?ver=230728" async></script>
-    <script>
+    <!-- <script>
         const board = new Board('.board');
-    </script>
+    </script> -->
+    <script src="./js/index.mjs" type="module"></script>
 </body>
 </html>
