@@ -19,7 +19,7 @@ class Board {
         this.fameLevel = this.defaultConfig.fameLevel;
         this.orderDuration = this.defaultConfig.orderDuration;
         this.orderLastTime = this.defaultConfig.orderLastTime;
-        this.emogeArr = ["🍎","🍊","🍋","🍉","🍇","🍒","🍑","🍌","🍈","🥗","🥚","🐔","🐷","🥓","🐮","🥛"]
+        this.emogeArr = ["🍎","🍊","🍋","🍉","🍇","🍒","🍑","🍌","🍈","🥗","🥚","🐣","🐥","🐔","🐷","🥓","🐮","🥩"]
 
         this.upgradeLevel = {
             newItem: 0,
