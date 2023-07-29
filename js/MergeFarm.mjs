@@ -1,4 +1,5 @@
 import { Board } from "./Board.mjs";
+import { TopStatus } from "./TopStatus.mjs";
 import { Upgrade } from "./Upgrade.mjs";
 
 class MergeFarm {
@@ -9,6 +10,7 @@ class MergeFarm {
         this.fame = 0;
         this.fameLevel = 0;
 
+        this.status = new TopStatus('.status');
         this.board = new Board('.board');
         this.upgrade = new Upgrade();
 

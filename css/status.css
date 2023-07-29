@@ -1,0 +1,8 @@
+.statusItem + .statusItem {
+    margin-left: 10px;
+}
+
+.statusItem:first-child {
+    margin-left: 0;
+    margin-right: auto;
+}
